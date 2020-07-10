@@ -31,10 +31,9 @@ console.log(`\n\x1b[34m⟳\x1b[0m  \x1b[46m\x1b[30m discord.js \x1b[0m Trying to
 const { onTicketChannelMessageSend, onTicketPrivateMessageSend, onTicketPainelReactionAdd, onTicketSelectorReactionAdd } = require('./events/ticketEvents')
 const { onBotReady } = require('./events/clientEvents');
 const { onCommandExecute } = require('./events/commandEvents');
-const { onGuildPreJoin, onGuildJoin } = require('./events/guildEvents');
+const { onGuildPreJoin, onGuildJoin, onUserSpamLink } = require('./events/guildEvents');
 const { onSendMessageFiltered } = require('./events/chatEvents');
-const { onReactionAddPacket, onPresenceUpdate } = require('./events/restEvents');
-
+const { onPacketReaction, onPacketPresence } = require('./events/packetEvents');
 
 client.on('guildMemberAdd', onGuildJoin)
 client.on('ready', onBotReady)
@@ -45,8 +44,9 @@ client.on('message', onSendMessageFiltered);
 client.on('messageReactionAdd', onTicketPainelReactionAdd)
 client.on('messageReactionAdd', onTicketSelectorReactionAdd);
 client.on('messageReactionAdd', onGuildPreJoin);
-client.on('raw', onReactionAddPacket);
-client.on('raw', onPresenceUpdate);
+client.on('raw', onPacketReaction);
+client.on('raw', onPacketPresence);
+client.on('richPresenceUpdate', (game,user) => onUserSpamLink(game,user))
 
 const { ticketsGC, capacityTick } = require('./controllers/TicketController');
 

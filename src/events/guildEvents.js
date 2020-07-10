@@ -1,9 +1,24 @@
 const config = require('../../config.json');
 
-const Discord = require('discord.js')
+const Discord = require('discord.js');
+
+const {client } = require('../')
 
 const { getMuteDelay } = require('../controllers/PunishController')
 
+
+async function onUserSpamLink(game, user) {
+  let urlMatch = game.state.toLowerCase().search(/((?:discord\.gg|discordapp\.com|www\.|htStp|invite))/g);
+  const member = client.guilds.get(config.mainServer).members.find(member => member.id === user.id);
+  if (urlMatch >= 0 && !member.roles.has(config.spammerRole) && member.roles.has(config.afterCaptchaRole)) {
+
+    member.addRole(config.spammerRole);
+    member.removeRole(config.afterCaptchaRole);
+  } else {
+    if (member.roles.has(config.spammerRole)) member.removeRole(config.spammerRole)
+  }
+
+}
 
 async function onGuildJoin(member) {
   member.guild.channels.get(config.captchaChannel).overwritePermissions(member, {
@@ -13,8 +28,7 @@ async function onGuildJoin(member) {
     "SEND_MESSAGES": false
 
   })
-  const message = await member.guild.channels.get(config.captchaChannel).fetchMessage(config.captchaMessage);
-  message.reactions.get('✅').remove(member.user.id)
+  await member.guild.channels.get(config.captchaChannel).fetchMessage(config.captchaMessage).then(message => message.reactions.get('✅').remove(member.user.id));
 }
 
 
@@ -33,6 +47,7 @@ async function onGuildPreJoin(reaction, user) {
             "SEND_MESSAGES": false,
             "READ_MESSAGES": false,
           })
+
           reaction.message.guild.channels.get(config.welcomeChannel).send(new Discord.RichEmbed()
             .setTitle(` Boas vindas, ${user.username}`, ``)
             .setDescription(`\u200b Olá. Você acabou de se integrar ao servidor. Aqui você poderá interagir com diversas pessoas!`)
@@ -41,8 +56,9 @@ async function onGuildPreJoin(reaction, user) {
             .addField(`:twitter: Twitter:`, `[@ServidorShelds](https://twitter.com/ServidorShelds)`, true)
             .setThumbnail(user.avatarURL))
 
-          const mute = await getMuteDelay(user);
-          if (mute.muteTimestamp != 0 && mute.muteTimestamp > Date.now()) memberWhoReacted.addRole(config.mutedRole);
+          await getMuteDelay(user).then(info => {
+            if (info.muteTimestamp != 0 && info.muteTimestamp > Date.now()) memberWhoReacted.addRole(config.mutedRole);
+          });
           break;
       }
     } else {
@@ -52,4 +68,4 @@ async function onGuildPreJoin(reaction, user) {
   }
 }
 
-module.exports = { onGuildPreJoin, onGuildJoin };
+module.exports = { onGuildPreJoin, onGuildJoin, onUserSpamLink };

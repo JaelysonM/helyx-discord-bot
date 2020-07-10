@@ -8,7 +8,7 @@ const { tickets, findTicketById, deleteTicket, ticketPresetMessages, getTicketDe
 
 const { composeDateBR, minutesToMillis, toMillis, formatCountdown } = require('../utils/dateUtils')
 
-const { isNumber } = require('../utils/utilies');
+const { isNumber } = require('../utils/miscsUtils');
 
 
 
@@ -29,25 +29,22 @@ async function onTicketPrivateMessageSend(message) {
     }
     messageContent = message.content;
 
-
-
     if (ticket.channel === null) {
       const ticketChat = await ticketGuild.createChannel(`#${ticket.user.discriminator}`, { type: 'text' });
       if (ticketChat === null) return;
       ticketChat.setParent(config.ticketsCategory);
       ticketChat.setTopic('Canal de ticket!');
 
-      const ticketPainel = await ticketChat.send(new Discord.RichEmbed()
+      await ticketChat.send(new Discord.RichEmbed()
         .setDescription(
           `Este ticket foi criado pelo membro:\n\`\`${ticket.user.username + '#' + ticket.user.discriminator}\`\`\n\nReaja com ❌ para encerrar o ticket e deletar o canal;\nReaja com ☝ para adquirir esse ticket;\n\nAtendente responsável: \`\`Nínguem\`\`\n\nID de recuperação do ticket:\n\`\`${ticketChat.id}\`\``)
         .setThumbnail(`https://i.imgur.com/33E8tfJ.png`)
-        .setColor(`#01C1BE`));
-
-      await ticketPainel.react('☝')
-      ticketPainel.react('❌')
-
+        .setColor(`#01C1BE`)).then(async message => {
+          ticket.chatPainelMsg = message;
+          await message.react('☝');
+          await message.react('❌');
+        });
       ticket.channel = ticketChat;
-      ticket.chatPainelMsg = ticketPainel;
 
       ticket.user.send(new Discord.RichEmbed()
         .setTitle('Este processo pode demorar alguns segundos!')
@@ -68,14 +65,12 @@ async function onTicketPrivateMessageSend(message) {
           .setTitle(`Mensagem de ${ticket.user.username}#${ticket.user.discriminator}:`)
           .setDescription(messageContent).setFooter('Todas as mensagem enviadas neste canal serão redirecionadas; ').setTimestamp(Date.now()));
       }
+    await ticket.user.send(new Discord.RichEmbed()
+      .setTitle('Recebemos sua mensagem!')
+      .setDescription('Sua mensagem chegou em nossa central de tickets, em alguns momentos você receberá uma resposta de nossos atendentes e será notificado novamente;')
+      .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730080440352823/RespTicket.png`)
+      .setColor(`#42f5cb`)).then(async callback => await callback.delete(5000));
 
-    try {
-      await ticket.user.send(new Discord.RichEmbed()
-        .setTitle('Recebemos sua mensagem!')
-        .setDescription('Sua mensagem chegou em nossa central de tickets, em alguns momentos você receberá uma resposta de nossos atendentes e será notificado novamente;')
-        .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730080440352823/RespTicket.png`)
-        .setColor(`#42f5cb`)).then(callback => callback.delete(5000));
-    } catch (err) { }
 
   } else {
     await message.author.send(':x: Você não possui um ticket aberto, logo não computamos esta mensagem!').then(callback => callback.delete(1500))
@@ -92,8 +87,6 @@ async function onTicketChannelMessageSend(message) {
 
   if (ticket.holder === null) message.delete();
 
-
-
   if (message.author === ticket.holder) {
 
     ticket.timestamp = Date.now() + minutesToMillis(10);
@@ -109,24 +102,19 @@ async function onTicketChannelMessageSend(message) {
         .setDescription(message.content).setFooter('Todas as mensagem enviadas neste canal serão redirecionadas; ').setTimestamp(Date.now())
       );
     }
+    await ticket.channel.send(new Discord.RichEmbed()
+      .setTitle('Sua mensagem foi enviada para ' + ticket.user.username)
+      .setDescription('Sua mensagem chegou até o ``usuário``, aguarde a próxima dúvida ou feche o ticket;')
+      .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730080440352823/RespTicket.png`)
+      .setColor(`#42f5cb`)).then(async msg => await msg.delete(5000));
 
-    try {
-      await ticket.channel.send(new Discord.RichEmbed()
-        .setTitle('Sua mensagem foi enviada para ' + ticket.user.username)
-        .setDescription('Sua mensagem chegou até o ``usuário``, aguarde a próxima dúvida ou feche o ticket;')
-        .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730080440352823/RespTicket.png`)
-        .setColor(`#42f5cb`)).then(msg => msg.delete(5000));
-    } catch (err) { }
   } else {
-    try {
-      await message.delete();
-      await message.author.send(new Discord.RichEmbed()
-        .setTitle('Ticket já arrematado!')
-        .setDescription('Este ticket já está em posse do atendente ' + ticket.holder.username + '#' + ticket.holder.discriminator)
-        .setThumbnail(ticket.holder.avatarURL)
-        .setColor(`#FF0000`)).then(msg => msg.delete(toMillis(10)));
-    } catch (err) {
-    }
+    await message.delete();
+    await message.author.send(new Discord.RichEmbed()
+      .setTitle('Ticket já arrematado!')
+      .setDescription('Este ticket já está em posse do atendente ' + ticket.holder.username + '#' + ticket.holder.discriminator)
+      .setThumbnail(ticket.holder.avatarURL)
+      .setColor(`#FF0000`)).then(async msg => await msg.delete(toMillis(10)));
   }
 }
 
@@ -162,16 +150,12 @@ async function onTicketPainelReactionAdd(reaction, user) {
       }
       break;
     case '❌':
-
       deleteTicket(ticket, new Discord.RichEmbed()
         .setTitle('Você teve seu ticket fechado!')
         .setDescription('Seu ticket foi encerrado em nossa central por: ``' + user.username + '#' + user.discriminator + '``\n\nVocê terá que esperar ``3 horas`` para criar outro ticket para nós;\nIsso ocorre com todos os tickets fechados em nossa central.\n\nFechado em: ``' + composeDateBR(Date.now()) + '``')
         .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730074077331525/AlertTicket.png`)
         .setColor(`#f5d442`));
-
-      if (config.ticketDelay)
-        addTicketDelay(ticket.user);
-
+      if (config.ticketDelay) addTicketDelay(ticket.user);
       break;
   }
 }
@@ -183,22 +167,20 @@ async function onTicketSelectorReactionAdd(reaction, user) {
   await reaction.remove(user.id);
 
   if (!config.ticketsEnabled) {
-    try {
-      await reaction.message.channel.send(new Discord.RichEmbed().setTitle(`Tickets desativados`).
-        setDescription(`${user} o criação de tickets está  \`\`desativada\`\`, aguarde e tente novamente mais tarde!`).setColor('#36393f').setImage(
-          `https://minecraftskinstealer.com/achievement/38/Cria%C3%A7%C3%A3o%20de%20tickets:/Desativada`
-        )).then((msg) => msg.delete(2000));
-    } catch (err) { }
+    await reaction.message.channel.send(new Discord.RichEmbed().setTitle(`Tickets desativados`).
+      setDescription(`${user} o criação de tickets está  \`\`desativada\`\`, aguarde e tente novamente mais tarde!`).setColor('#36393f').setImage(
+        `https://minecraftskinstealer.com/achievement/38/Cria%C3%A7%C3%A3o%20de%20tickets:/Desativada`
+      )).then(async msg => await msg.delete(2000));
     return;
   }
 
-  const delay = await getTicketDelay(user);
+  const account = await getTicketDelay(user);
 
-  if (delay.ticketTimestamp != 0 && delay.ticketTimestamp > Date.now()) {
+  if (account.ticketTimestamp != 0 && account.ticketTimestamp > Date.now()) {
     user.send(new Discord.RichEmbed().setTitle(`Intervalo para criação de ticket`).
       setDescription(`${user} Você está em um intervalo de criação de tickets!`).setColor('#36393f').setImage(
-        `https://minecraftskinstealer.com/achievement/17/Aguarde:/${formatCountdown(delay.ticketTimestamp - Date.now())}`
-      )).then((msg) => msg.delete(10000));
+        `https://minecraftskinstealer.com/achievement/17/Aguarde:/${formatCountdown(account.ticketTimestamp - Date.now())}`
+      )).then(async msg => await msg.delete(10000));
     return;
   }
 
@@ -210,12 +192,10 @@ async function onTicketSelectorReactionAdd(reaction, user) {
 
   switch (reaction.emoji.name) {
     case '❓':
-      try {
-        reaction.message.channel.send(new Discord.RichEmbed().setTitle(`Criando seu ticket`).
-          setDescription(`Pedimos que você redirecione-se as suas mensagens privadas onde estaremos enviando informações.`).setColor('#36393f').setImage(
-            `https://minecraftskinstealer.com/achievement/10/${user.username}/Confira+seu+privado!`
-          )).then((msg) => msg.delete(2000));
-      } catch (err) { }
+      reaction.message.channel.send(new Discord.RichEmbed().setTitle(`Criando seu ticket`).
+        setDescription(`Pedimos que você redirecione-se as suas mensagens privadas onde estaremos enviando informações.`).setColor('#36393f').setImage(
+          `https://minecraftskinstealer.com/achievement/10/${user.username}/Confira+seu+privado!`
+        )).then(async msg => await msg.delete(2000));
 
       const mainPainelMessage = await user.send(`${user}`, new Discord.RichEmbed().setTitle(`Converse conosco`).
         setDescription(`Você pode enviar mais informações sobre sua dúvida do ou no servidor aqui mesmo. Lembrando que, o sistema suporta imagens e links enviados.
@@ -229,8 +209,6 @@ async function onTicketSelectorReactionAdd(reaction, user) {
         .setDescription('Dentro de alguns momentos ele será arrematado e respondido, fique a vontade para falar sua dúvida.\n\nNão se preocupe se você não for atendido ele irá fechar\nautomaticamente, e você poderá abrir um novo posteriormente.')
         .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730074077331525/AlertTicket.png`)
         .setColor(`#f5d442`));
-
-
 
       tickets[user.id] = {
         channel: null,

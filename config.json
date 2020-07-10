@@ -12,6 +12,7 @@
 	"attendanceServer": "730509406529126481",
 	"ticketsCategory": "730514079885820014",
 	"welcomeChannel": "730282766633009195",
+	"spammerRole": "730281527648452661",
 	
 	"ticketsEnabled": true,
 	"ticketDelay": true,
