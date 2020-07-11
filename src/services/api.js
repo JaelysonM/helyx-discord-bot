@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const api = axios.create({
-  baseURL: "http://mcapi.us/server/status?ip=",
+const api = (server) => axios.create({
+  baseURL: `http://mcapi.us/server/status?ip=${server}`,
   timeout: 2000
 });
 

@@ -7,7 +7,7 @@
 	"captchaMessage": "730636748748619882",
 	"afterCaptchaRole": "730281526750740541",
 	"attendancePainelChannel": "730284028669722644",
-	"attendancePainelMessage": "730604888131633222",
+	"attendancePainelMessage": "731295408479010958",
 	"mainServer": "707404941001621578",
 	"attendanceServer": "730509406529126481",
 	"ticketsCategory": "730514079885820014",
@@ -15,7 +15,7 @@
 	"spammerRole": "730281527648452661",
 	
 	"ticketsEnabled": true,
-	"ticketDelay": true,
+	"ticketDelay": false,
 	"ticketsCapacity": 50,
 
 	"mutedRole": "730281527648452661",

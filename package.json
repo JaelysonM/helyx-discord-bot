@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.19.2",
-    "discord.js": "11.5.1",
+    "discord.js": "^12.2.0",
+    "ffmpeg-binaries": "^3.2.2-3",
     "fs": "0.0.1-security",
     "moment": "^2.27.0",
     "moment-duration-format": "^2.3.2",

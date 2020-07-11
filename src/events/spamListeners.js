@@ -1,0 +1,24 @@
+const { ListenerAdapter, ListenerEnums: { MESSAGE } } = require('../adapters/ListenerAdapter');
+
+const { MessageEmbed } = require('discord.js')
+
+module.exports = (client) => class SpamListeners extends ListenerAdapter {
+  constructor() {
+    super(client, [MESSAGE]);
+  }
+  async onMessageListener(message) {
+    if (message.author.bot) return;
+    const content = message.content;
+
+    if (content.startsWith("discord.gg/") || content.startsWith(".gg") || content.startsWith("https:") || content.startsWith("http:") || content.startsWith(".me") || content.startsWith('prnt.sc/') || content.startsWith("focus") || content.startsWith("vanish") || content.startsWith("community") || content.startsWith("stone") || content.startsWith("redesky") || content.startsWith("landwars") || content.startsWith("caralho") || content.startsWith("puta") || content.startsWith("fdp") || content.startsWith("cu") || content.startsWith("pnc") || content.startsWith("pau") || content.startsWith("lixo") || content.startsWith("seu merda")) {
+      if (!message.member.hasPermission(8)) {
+        message.delete(1)
+        let ErroEmbed = new MessageEmbed()
+          .setColor(`#36393f`)
+          .setTitle(`Palavra banida ou mensagem divulgativa!`)
+          .setDescription("\n Sua mensagem foi detectada como uma frase de calão divulgativo ou contém uma \n palavra banida! você pode ser banido pelo sistema de auto-moderação. \n \n Necessário permissão \`ADMINISTRADOR\` para enviar esta mensagem.")
+        message.channel.send(ErroEmbed).then(msg => { msg.delete({timeout: 6000}) })
+      }
+    }
+  }
+}

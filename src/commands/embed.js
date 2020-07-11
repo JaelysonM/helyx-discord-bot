@@ -1,15 +1,15 @@
-const Discord = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 module.exports.run = async (client, message, args) => {
 
     message.delete();
 
     if (!message.member.hasPermission("MANAGE_MESSAGES"))
-        return message.channel.send(`Você não possui permissão para executar este comando.`).then(msg => msg.delete(500));
+        return message.channel.send(`Você não possui permissão para executar este comando.`).then(msg => msg.delete({ timeout: 500 }));
 
     await message.author.createDM()
 
-    let titulo = new Discord.RichEmbed()
+    let titulo = new MessageEmbed()
         .setAuthor(`Embed`, client.user.avatarURL)
         .setDescription(`\n\u200bQual título você deseja para enviar o embed?`)
         .setFooter(`© RedeShelds - Todos os direitos reservados!`)
@@ -20,7 +20,7 @@ module.exports.run = async (client, message, args) => {
         collector.on('collect', a => {
             var título = a.content
 
-            let desc = new Discord.RichEmbed()
+            let desc = new MessageEmbed()
                 .setAuthor(`Embed`, client.user.avatarURL)
                 .setDescription(`\n\u200bQual descrição você deseja para enviar o anúncio?`)
                 .setFooter(`© RedeShelds - Todos os direitos reservados!`)
@@ -31,7 +31,7 @@ module.exports.run = async (client, message, args) => {
             collector.on('collect', async a => {
                 var descrição = a.content
 
-                let img = new Discord.RichEmbed()
+                let img = new MessageEmbed()
                     .setAuthor(`Embed`, client.user.avatarURL)
                     .setDescription(`\n\u200bVocê deseja adicionar uma imagem no seu anúncio?\n\nA imagem deve ser dada em link, \`https://cdn.discordapp.com/attachments/710494208011665430/711933023293014178/2fd49f3414c69c257883bc473bfdca55.png\`, desse tipo!\n\nCaso você não queira enviar uma imagem, digite \`nao\` no chat.\n\u200b`)
                     .setImage(`https://cdn.discordapp.com/attachments/710494208011665430/711933023293014178/2fd49f3414c69c257883bc473bfdca55.png`)
@@ -45,7 +45,7 @@ module.exports.run = async (client, message, args) => {
 
                     if (imagem == `nao`) {
 
-                        let embed = new Discord.RichEmbed()
+                        let embed = new MessageEmbed()
                             .setTitle(`${título}`)
                             .setDescription(`󠂪󠂪${descrição}\n`)
                             .setFooter(`© RedeShelds - Todos os direitos reservados!`)
@@ -76,7 +76,7 @@ module.exports.run = async (client, message, args) => {
                         })
                     } else {
 
-                        let embedimagem = new Discord.RichEmbed()
+                        let embedimagem = new MessageEmbed()
                             .setTitle(`${título}`)
                             .setDescription(`${descrição}\n`)
                             .setFooter(`© RedeShelds - Todos os direitos reservados!`)
