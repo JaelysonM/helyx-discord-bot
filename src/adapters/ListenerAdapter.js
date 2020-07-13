@@ -13,7 +13,9 @@ const ListenerEnums = {
   USER_UPDATE_USERNAME: 'userUsernameUpdate',
   USER_UPDATE_AVATAR: 'userAvatarUpdate',
 
-  GUILD_MEMBER_UPDATE_NICKNAME: 'guildMemberNicknameUpdate'
+  GUILD_MEMBER_UPDATE_NICKNAME: 'guildMemberNicknameUpdate',
+
+  PRESENCE_UPDATE: 'presenceUpdate'
 }
 
 class ListenerAdapter {
@@ -34,6 +36,7 @@ class ListenerAdapter {
   async onGuildMemberUpdateNickname(member, oldNickname, newNickname) { }
 
   async onGuildMemberAdd(member) { }
+
   async onPacketListener(packet) { }
 
   async onMessageListener(message) { }
@@ -45,6 +48,8 @@ class ListenerAdapter {
   async onBotReady() { }
 
   async onGuildMemberUpdate(oldMember, newMember) { }
+
+  async onPresenceUpdate(oldMember, newMember) { }
 
   async onGuildMemberRoleAdd(member, role) { }
 
@@ -81,6 +86,8 @@ class ListenerAdapter {
       this.client.on(ListenerEnums.USER_UPDATE_USERNAME, this.onUserUpdateUsername)
     if (this.listeners.includes(ListenerEnums.USER_UPDATE_AVATAR))
       this.client.on(ListenerEnums.USER_UPDATE_AVATAR, this.onUserUpdateAvatar)
+    if (this.listeners.includes(ListenerEnums.PRESENCE_UPDATE))
+      this.client.on(ListenerEnums.PRESENCE_UPDATE, this.onPresenceUpdate)
   }
 }
 module.exports = {

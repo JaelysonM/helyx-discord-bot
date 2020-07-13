@@ -6,6 +6,7 @@ module.exports =
     constructor() {
       super(client, [PACKET, GUILD_MEMBER_UPDATE]);
     }
+
     async onGuildMemberUpdate(oldMember, newMember) {
 
       oldMember.roles.cache.map(value => {
@@ -35,12 +36,7 @@ module.exports =
 
     }
     async onPacketListener(packet) {
-
-      if (['PRESENCE_UPDATE'].includes(packet.t)) {
-        const user = client.users.cache.get(packet.d.user.id);
-        if (packet.d.game != undefined && packet.d.game != null && packet.d.game.state != undefined && user != undefined);
-        client.emit('richPresenceUpdate', packet.d.game, user);
-      } else if (['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) {
+      if (['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) {
         const channel = await client.channels.cache.get(packet.d.channel_id);
         if (channel == null) return;
 
@@ -60,3 +56,21 @@ module.exports =
 
     }
   }
+
+
+/*
+    if (['PRESENCE_UPDATE'].includes(packet.t)) {
+      const user = client.users.cache.get(packet.d.user.id);
+      if (packet.d.game != undefined && packet.d.game != null && packet.d.game.state != undefined && user != undefined) {
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log(packet.d)
+
+        // client.emit('richPresenceUpdate', packet.d.game, user);
+      }
+
+    } else
+*/

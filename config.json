@@ -12,12 +12,12 @@
 	"attendanceServer": "730509406529126481",
 	"ticketsCategory": "730514079885820014",
 	"welcomeChannel": "730282766633009195",
-	"spammerRole": "730281527648452661",
+	"spammerRole": "730293162538434682",
 	
 	"ticketsEnabled": true,
 	"ticketDelay": false,
 	"ticketsCapacity": 50,
-
+	"staffRoles": ["MASTER","GERENTE","MANAGER","ADMIN","MODERADOR","AJUDANTE"],
 	"mutedRole": "730281527648452661",
 	"punishChannel": "730284117991882762",
 

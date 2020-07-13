@@ -3,12 +3,12 @@ const DAYS_ARRAY = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 
 
 
 function formatTimeBR(ms) {
-  const date = new Date();
-  const str = '';
-  if ((date.getUTCDate() - 1) > 0) str.concat(`${(date.getUTCDate() - 1)} ${date.getUTCDate() - 1 == 1 ? `dia ` : `dias `}`)
-  if (date.getUTCHours() > 0) str.concat(`${(date.getUTCHours())} ${date.getUTCHours() == 1 ? `hora ` : `horas `}`)
-  if (date.getUTCMinutes() > 0) str.concat(`${(date.getUTCMinutes())} ${date.getUTCMinutes() == 1 ? `minuto ` : `minutos `}`)
-  if (date.getUTCSeconds() > 0) str.concat(`${(date.getUTCSeconds())} ${date.getUTCSeconds() == 1 ? `segundo ` : `segundo `}`)
+  const date = new Date(ms);
+  var str = '';
+  if ((date.getUTCDate() - 1) > 0) str+=`${(date.getUTCDate() - 1)} ${date.getUTCDate() - 1 == 1 ? `dia ` : `dias `}`
+  if (date.getUTCHours() > 0) str+=`${(date.getUTCHours())} ${date.getUTCHours() == 1 ? `hora ` : `horas `}`
+  if (date.getUTCMinutes() > 0) str+=`${(date.getUTCMinutes())} ${date.getUTCMinutes() == 1 ? `minuto ` : `minutos `}`
+  if (date.getUTCSeconds() > 0) str+=`${(date.getUTCSeconds())} ${date.getUTCSeconds() == 1 ? `segundo` : `segundos`}`
   if (ms == 0) return '1 segundo'; else return str;
 }
 function formatTimer(ms) {
