@@ -5,7 +5,7 @@ module.exports.run = async (client, message, args) => {
     message.delete();
 
     if (!message.member.hasPermission("MANAGE_MESSAGES"))
-        return message.channel.send(`Você não possui permissão para executar este comando.`).then(msg => msg.delete({ timeout: 500 }));
+        return message.channel.send(`Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 500 }) } catch (error) { } });
 
     await message.author.createDM()
 

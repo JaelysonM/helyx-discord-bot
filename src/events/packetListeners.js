@@ -56,21 +56,3 @@ module.exports =
 
     }
   }
-
-
-/*
-    if (['PRESENCE_UPDATE'].includes(packet.t)) {
-      const user = client.users.cache.get(packet.d.user.id);
-      if (packet.d.game != undefined && packet.d.game != null && packet.d.game.state != undefined && user != undefined) {
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log(packet.d)
-
-        // client.emit('richPresenceUpdate', packet.d.game, user);
-      }
-
-    } else
-*/

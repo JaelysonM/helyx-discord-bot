@@ -17,7 +17,7 @@ module.exports = (client) => class SpamListeners extends ListenerAdapter {
           .setColor(`#36393f`)
           .setTitle(`Palavra banida ou mensagem divulgativa!`)
           .setDescription("\n Sua mensagem foi detectada como uma frase de calão divulgativo ou contém uma \n palavra banida! você pode ser banido pelo sistema de auto-moderação. \n \n Necessário permissão \`ADMINISTRADOR\` para enviar esta mensagem.")
-        message.channel.send(ErroEmbed).then(msg => { msg.delete({ timeout: 6000 }) })
+        message.channel.send(ErroEmbed).then(async message => { try { await message.delete({ timeout: 6000 }) } catch (error) { } })
       }
     }
   }

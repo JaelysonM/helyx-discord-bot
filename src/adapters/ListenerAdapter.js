@@ -15,19 +15,18 @@ const ListenerEnums = {
 
   GUILD_MEMBER_UPDATE_NICKNAME: 'guildMemberNicknameUpdate',
 
-  PRESENCE_UPDATE: 'presenceUpdate'
-}
+  PRESENCE_UPDATE: 'presenceUpdate',
+};
 
 class ListenerAdapter {
-
   constructor(client, listeners) {
     this.listeners = listeners;
     this.client = client;
   }
+
   getListeners() {
     return this.listeners;
   }
-
 
   async onUserUpdateUsername(user, oldUsername, newUsername) { }
 
@@ -43,7 +42,7 @@ class ListenerAdapter {
 
   async onReactionAddListener(reaction, user) { }
 
-  async onReactionRemoveListener(reaction, user) { }
+  async onReactionRemove(reaction, user) { }
 
   async onBotReady() { }
 
@@ -55,41 +54,53 @@ class ListenerAdapter {
 
   async onGuildMemberRoleRemove(member, role) { }
 
-
   async onRichPresenceUpdate(game, user) { }
 
   registerListeners() {
-
-    if (this.listeners.includes(ListenerEnums.RICH_PRESENCE))
-      this.client.on(ListenerEnums.RICH_PRESENCE, this.onRichPresenceUpdate)
-    if (this.listeners.includes(ListenerEnums.READY))
-      this.client.on(ListenerEnums.READY, this.onBotReady)
-    if (this.listeners.includes(ListenerEnums.REACTION_REMOVE))
-      this.client.on(ListenerEnums.REACTION_REMOVE, this.onReactionRemoveListener)
-    if (this.listeners.includes(ListenerEnums.REACTION_ADD))
-      this.client.on(ListenerEnums.REACTION_ADD, this.onReactionAddListener)
-    if (this.listeners.includes(ListenerEnums.MESSAGE))
-      this.client.on(ListenerEnums.MESSAGE, this.onMessageListener)
-    if (this.listeners.includes(ListenerEnums.PACKET))
-      this.client.on(ListenerEnums.PACKET, this.onPacketListener)
-    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_ADD))
-      this.client.on(ListenerEnums.GUILD_MEMBER_ADD, this.onGuildMemberAdd)
-    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_UPDATE))
-      this.client.on(ListenerEnums.GUILD_MEMBER_UPDATE, this.onGuildMemberUpdate)
-    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_ROLE_ADD))
-      this.client.on(ListenerEnums.GUILD_MEMBER_ROLE_ADD, this.onGuildMemberRoleAdd)
-    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_ROLE_REMOVE))
-      this.client.on(ListenerEnums.GUILD_MEMBER_ROLE_REMOVE, this.onGuildMemberRoleRemove)
-    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_UPDATE_NICKNAME))
-      this.client.on(ListenerEnums.GUILD_MEMBER_UPDATE_NICKNAME, this.onGuildMemberUpdateNickname)
-    if (this.listeners.includes(ListenerEnums.USER_UPDATE_USERNAME))
-      this.client.on(ListenerEnums.USER_UPDATE_USERNAME, this.onUserUpdateUsername)
-    if (this.listeners.includes(ListenerEnums.USER_UPDATE_AVATAR))
-      this.client.on(ListenerEnums.USER_UPDATE_AVATAR, this.onUserUpdateAvatar)
-    if (this.listeners.includes(ListenerEnums.PRESENCE_UPDATE))
-      this.client.on(ListenerEnums.PRESENCE_UPDATE, this.onPresenceUpdate)
+    if (this.listeners.includes(ListenerEnums.RICH_PRESENCE)) {
+      this.client.on(ListenerEnums.RICH_PRESENCE, this.onRichPresenceUpdate);
+    }
+    if (this.listeners.includes(ListenerEnums.READY)) {
+      this.client.on(ListenerEnums.READY, this.onBotReady);
+    }
+    if (this.listeners.includes(ListenerEnums.REACTION_REMOVE)) {
+      this.client.on(ListenerEnums.REACTION_REMOVE, this.onReactionRemoveListener);
+    }
+    if (this.listeners.includes(ListenerEnums.REACTION_ADD)) {
+      this.client.on(ListenerEnums.REACTION_ADD, this.onReactionAddListener);
+    }
+    if (this.listeners.includes(ListenerEnums.MESSAGE)) {
+      this.client.on(ListenerEnums.MESSAGE, this.onMessageListener);
+    }
+    if (this.listeners.includes(ListenerEnums.PACKET)) {
+      this.client.on(ListenerEnums.PACKET, this.onPacketListener);
+    }
+    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_ADD)) {
+      this.client.on(ListenerEnums.GUILD_MEMBER_ADD, this.onGuildMemberAdd);
+    }
+    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_UPDATE)) {
+      this.client.on(ListenerEnums.GUILD_MEMBER_UPDATE, this.onGuildMemberUpdate);
+    }
+    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_ROLE_ADD)) {
+      this.client.on(ListenerEnums.GUILD_MEMBER_ROLE_ADD, this.onGuildMemberRoleAdd);
+    }
+    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_ROLE_REMOVE)) {
+      this.client.on(ListenerEnums.GUILD_MEMBER_ROLE_REMOVE, this.onGuildMemberRoleRemove);
+    }
+    if (this.listeners.includes(ListenerEnums.GUILD_MEMBER_UPDATE_NICKNAME)) {
+      this.client.on(ListenerEnums.GUILD_MEMBER_UPDATE_NICKNAME, this.onGuildMemberUpdateNickname);
+    }
+    if (this.listeners.includes(ListenerEnums.USER_UPDATE_USERNAME)) {
+      this.client.on(ListenerEnums.USER_UPDATE_USERNAME, this.onUserUpdateUsername);
+    }
+    if (this.listeners.includes(ListenerEnums.USER_UPDATE_AVATAR)) {
+      this.client.on(ListenerEnums.USER_UPDATE_AVATAR, this.onUserUpdateAvatar);
+    }
+    if (this.listeners.includes(ListenerEnums.PRESENCE_UPDATE)) {
+      this.client.on(ListenerEnums.PRESENCE_UPDATE, this.onPresenceUpdate);
+    }
   }
 }
 module.exports = {
-  ListenerAdapter, ListenerEnums
-}
+  ListenerAdapter, ListenerEnums,
+};

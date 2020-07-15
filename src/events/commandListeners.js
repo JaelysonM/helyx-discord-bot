@@ -9,14 +9,24 @@ module.exports = (client) => class CommandListeners extends ListenerAdapter {
     if (message.author.bot) return;
     if (message.channel.type === 'dm') return;
 
-    let prefix = client.config.prefix;
-    let messageArray = message.content.split(' ');
-    let command = messageArray[0];
-    let args = messageArray.splice(1);
+    if (!client.configCache.has(message.guild.id)) return;
+
+    const { prefix } = client.configCache.get(message.guild.id);
+    const messageArray = message.content.split(' ');
+    const command = messageArray[0];
+    const args = messageArray.splice(1);
+
 
     if (!message.content.startsWith(prefix)) return;
+    let archiveCommand;
+    if (client.commands.has(command.slice(prefix.length))) {
+      archiveCommand = client.commands.get(command.slice(prefix.length));
+    } else if (client.aliases.has(command.slice(prefix.length))) {
+      archiveCommand = client.commands.get(client.aliases.get(command.slice(prefix.length)));
+    }
+    if (archiveCommand)
+      archiveCommand.run(client, message, args);
 
-    let archiveCommand = client.commands.get(command.slice(prefix.length));
-    if (archiveCommand) archiveCommand.run(client, message, args);
+
   }
 }

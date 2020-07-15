@@ -7,7 +7,6 @@
     "axios": "^0.19.2",
     "discord.js": "^12.2.0",
     "ffmpeg-binaries": "^3.2.2-3",
-    "fs": "0.0.1-security",
     "quick.db": "^7.1.1"
   },
   "devDependencies": {

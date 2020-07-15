@@ -12,5 +12,5 @@ function toMillis(seconds) {
 }
 
 module.exports = {
-  daysToMillis,hoursToMillis, minutesToMillis,toMillis
+  daysToMillis, hoursToMillis, minutesToMillis, toMillis
 }
