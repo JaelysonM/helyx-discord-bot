@@ -74,13 +74,35 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
             }
             memberWhoReacted.roles.add(config.afterCaptchaRole);
 
-            reaction.message.guild.channels.cache.get(config.welcomeChannel).send(new MessageEmbed()
-              .setTitle(` Boas vindas, ${user.username}`, '')
-              .setDescription('\u200b Olá. Você acabou de se integrar ao servidor. Aqui você poderá interagir com diversas pessoas!')
-              .addField('🎮 IP:', 'redeshelds.com', true)
-              .addField(':loja: Loja:', '[Clique aqui](https://loja.redeshelds.com)', true)
-              .addField(':twitter: Twitter:', '[@ServidorShelds](https://twitter.com/ServidorShelds)', true)
-              .setThumbnail(user.avatarURL));
+
+            const config = client.configCache.get(reaction.message.guild.id);
+            if (config.welcomeMessage != null) {
+              function replacer(key, value) {
+                if (typeof value === 'string') {
+                  if (value.includes('${username}')) {
+                    return value.replace('${username}', user.username);
+                  } else if (value.includes('${discriminator}')) {
+                    return value.replace('${discriminator}', user.discriminator);
+                  } else if (value.includes('${currentDate}')) {
+                    return value.replace('${currentDate}', Date.now());
+                  } else if (value.includes('${serverName}')) {
+                    return value.replace('${serverName}', reaction.message.guild.name);
+                  } else if (value.includes('${serverId}')) {
+                    return value.replace('${serverId}', reaction.message.guild.id);
+                  } else if (value.includes('${userAvatar}')) {
+                    return value.replace('${userAvatar}', user.avatarURL);
+                  } else if (value.includes('${serverIcon}')) {
+                    return value.replace('${serverIcon}', reaction.message.guild.iconURL);
+                  } else if (value.includes('${userId}')) {
+                    return value.replace('${userId}', user.id);
+                  }
+                }
+                return value;
+              }
+              var jsonString = JSON.stringify(config.welcomeMessage, replacer);
+              var jsonReplaced = JSON.parse(jsonString);
+              reaction.message.guild.channels.cache.get(config.welcomeChannel).send(jsonReplaced.content, { embed: jsonReplaced.embed });
+            }
 
             await client.getAccount(user, reaction.message.guild).then((info) => {
               if (info.muteTimestamp != 0 && info.muteTimestamp > Date.now()) memberWhoReacted.roles.add(config.mutedRole);

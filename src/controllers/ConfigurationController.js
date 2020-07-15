@@ -1,6 +1,7 @@
 
 module.exports = client => {
   client.defaultConfigBody = {
+    welcomeMessage: null,
     isMainServer: true,
     prefix: '&',
     membro: 'membro',

@@ -27,16 +27,17 @@ exports.run = async (client, message, args) => {
       const collectorReaction = msg.createReactionCollector(filter, { time: 1000 * 20, max: 1 });
 
       collectorReaction.on('collect', async (reaction, reactionCollector) => {
-        if (reaction.message.deleted) return;
         reaction.users.remove(message.author)
         switch (reaction.emoji.name) {
           case '❌':
+            try { await reaction.message.delete(); } catch (error) { }
             message.channel.send(`> 📌 Você cancelou a configuração do servidor!`).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } })
-            reaction.message.delete();
+            collector.stop();
             break;
           case '🧾':
+            try { await reaction.message.delete(); } catch (error) { }
+            collector.stop();
             message.channel.send(`> 📌 Você baixou as configurações atuais do servidor!`).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } })
-            reaction.message.delete();
             fs.writeFileSync(`./cache/server_settings.json`, JSON.stringify(await client.getGuild(message.guild), null, '\t'), 'utf8')
             const attachment = new MessageAttachment('./cache/server_settings.json');
             message.channel.send(attachment).then(async message => { try { await message.delete({ timeout: 1000 * 60 }) } catch (error) { } })
@@ -47,8 +48,6 @@ exports.run = async (client, message, args) => {
       });
 
       collector.on('collect', async (collectMessage) => {
-
-        if (message == null) return;
 
         const file = collectMessage.attachments.first();
 
@@ -82,23 +81,23 @@ exports.run = async (client, message, args) => {
               .setImage(`https://minecraftskinstealer.com/achievement/2/Foram+feitas/${Object.keys(json).length}+${Object.keys(json).length < 2 ? 'alteração' : 'alterações'}`)
               .setDescription(`\n\nVocê alterou as ** configurações ** do servidor: \`\`\`css\n${collectMessage.guild.name} \`\`\``).addField('**Alterações realizadas:**', `${composeChanges()}`))
 
-            collectMessage.delete();
+            try { await collectMessage.delete(); } catch (error) { }
+            collectorReaction.stop();
           } catch (err) {
+            collectorReaction.stop();
             collectMessage.reply(`🚫 Arquivo inválido! ${file.name} não contem o formato padrão de um arquivo .json.`).then(async message => { try { await message.delete({ timeout: 1500 }) } catch (error) { } })
-            collectMessage.delete();
+            try { await collectMessage.delete(); } catch (error) { }
           }
 
         } else {
-          collectMessage.reply('🚫 Não existe nenhum arquivo nessa mensagem enviada.').then(m => m.delete({ timeout: 1500 }))
-          collectMessage.delete();
+          collectorReaction.stop();
+          collectMessage.reply('🚫 Não existe nenhum arquivo nessa mensagem enviada.').then(async message => { try { await message.delete({ timeout: 1500 }) } catch (error) { } })
+          try { await collectMessage.delete(); } catch (error) { }
         }
 
       });
 
       try { await msg.delete({ timeout: 20 * 1000 }) } catch (error) { }
-
-
-
     }
     )
 }
