@@ -39,14 +39,14 @@ exports.run = async (client, message, args, command) => {
             collector.stop();
             break;
           case '🧾':
-            try { await reaction.message.delete(); } catch (error) { }
             collector.stop();
             message.channel.send(`> 📌 Você baixou as configurações atuais do servidor!`).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } })
-            fs.writeFileSync(`./cache/server_settings.json`, JSON.stringify(await client.getGuild(message.guild), null, '\t'), 'utf8')
-            const attachment = new MessageAttachment('./cache/server_settings.json');
+            fs.writeFileSync(`/tmp/bot-cache/server_settings.json`, JSON.stringify(await client.getGuild(message.guild), null, '\t'), 'utf8')
+            const attachment = new MessageAttachment('/tmp/bot-cache/server_settings.json');
             message.channel.send(attachment).then(async message => { try { await message.delete({ timeout: 1000 * 60 }) } catch (error) { } })
             await sleep(500);
-            fs.unlinkSync('./cache/server_settings.json');
+            fs.unlinkSync('/tmp/bot-cache/server_settings.json');
+            try { await reaction.message.delete(); } catch (error) { }
             break;
         }
       });
@@ -60,10 +60,10 @@ exports.run = async (client, message, args, command) => {
             collectMessage.reply(`🚫 Arquivo inválido! ${file.name} deve ser um arquivo .json!`).then(async message => { try { await message.delete({ timeout: 1500 }) } catch (error) { } })
             return;
           }
-          const fileName = `${Date.now()}__settings.json`
+          const fileName = `${Date.now()}_settings.json`
           try {
 
-            const json = await downloadFile(file.attachment, 'cache', fileName)
+            const json = await downloadFile(file.attachment, 'bot-cache', fileName)
             const configuration = await client.updateGuildValues(collectMessage.guild, json);
             client.configCache.set(collectMessage.guild.id, configuration);
 

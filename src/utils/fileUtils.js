@@ -9,13 +9,13 @@ async function downloadFile(url, folder, name) {
       method: 'GET',
       responseType: 'stream'
     });
-    response.data.pipe(fs.createWriteStream(`./${folder}/${name}`));
+    response.data.pipe(fs.createWriteStream(`/tmp/${folder}/${name}`));
     await sleep(500)
-    const json = JSON.parse(fs.readFileSync(`./${folder}/${name}`));
-    fs.unlinkSync(`./${folder}/${name}`)
+    const json = JSON.parse(fs.readFileSync(`/tmp/${folder}/${name}`));
+    fs.unlinkSync(`/tmp/${folder}/${name}`)
     return json;
   } catch (err) {
-    fs.unlinkSync(`./${folder}/${name}`)
+    fs.unlinkSync(`/tmp/${folder}/${name}`)
     throw { error: 'Invalid file format and content' }
   }
 
