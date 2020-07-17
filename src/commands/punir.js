@@ -3,12 +3,12 @@ const { formatDateBR, formatTimeBR } = require('../utils/dateUtils')
 
 const { toMillis, hoursToMillis, daysToMillis } = require('../utils/timeUtils');
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args, command) => {
     message.delete()
 
     const config = client.configCache.get(message.guild.id);
-    if (!message.member.roles.cache.some(r => ["AJUDANTE", "MODERADOR", "ADMIN", "GERENTE", "MASTER", "SLA.COM", "MANAGER"].includes(r.name)))
-        return message.channel.send(`Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     let member = message.mentions.members.first()
     if (!member) return message.channel.send(`Necessito de um usuário para punir!`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
@@ -128,4 +128,6 @@ module.exports.run = async (client, message, args) => {
 }
 exports.help = {
     name: 'punir',
+    roles: ['AJUDANTE'],
+    description: 'Abre um painel de punição de membros;'
 }

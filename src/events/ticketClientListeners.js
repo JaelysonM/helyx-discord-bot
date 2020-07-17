@@ -90,21 +90,29 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
     reaction.users.remove(user);
     const config = client.configCache.get(reaction.message.guild.id);
     if (!config.ticketsEnabled) {
-      await user.send(new MessageEmbed().setTitle('Tickets desativados!')
-        .setDescription(`${user} o criação de tickets está  \`\`desativada\`\`, aguarde e tente novamente mais tarde!`).setColor('#36393f')
-        .setImage(
-          'https://minecraftskinstealer.com/achievement/38/Cria%C3%A7%C3%A3o%20de%20tickets:/Desativada',
-        )).then(async message => { try { await message.delete({ timeout: 4000 }) } catch (error) { } });
+      try {
+        const message = await user.send(new MessageEmbed().setTitle('Tickets desativados!')
+          .setDescription(`${user} o criação de tickets está  \`\`desativada\`\`, aguarde e tente novamente mais tarde!`).setColor('#36393f')
+          .setImage(
+            'https://minecraftskinstealer.com/achievement/38/Cria%C3%A7%C3%A3o%20de%20tickets:/Desativada',
+          ))
+        try { await message.delete({ timeout: 4000 }) } catch (error) { }
+      } catch (error) { }
       return;
     }
 
     const account = await client.getAccount(user, reaction.message.guild);
     if (config.ticketDelay && account.ticketTimestamp != 0 && account.ticketTimestamp > Date.now()) {
-      user.send(new MessageEmbed().setTitle('Intervalo para criação de ticket!')
-        .setDescription(`${user} Você está em um intervalo de criação de tickets!`).setColor('#36393f')
-        .setImage(
-          `https://minecraftskinstealer.com/achievement/17/Aguarde:/${formatTimer(account.ticketTimestamp - Date.now())}`,
-        )).then(async message => { try { await message.delete({ timeout: 10000 }) } catch (error) { } });
+      try {
+        const message = await user.send(new MessageEmbed().setTitle('Intervalo para criação de ticket!')
+          .setDescription(`${user} Você está em um intervalo de criação de tickets!`).setColor('#36393f')
+          .setImage(
+            `https://minecraftskinstealer.com/achievement/17/Aguarde:/${formatTimer(account.ticketTimestamp - Date.now())}`,
+          ))
+        try { await message.delete({ timeout: 10000 }) } catch (error) { }
+
+      } catch (error) { }
+
       return;
     }
 
@@ -116,11 +124,20 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
 
     switch (reaction.emoji.name) {
       case '❓':
-        reaction.message.channel.send(new MessageEmbed().setTitle('Criando seu ticket')
-          .setDescription('Pedimos que você redirecione-se as suas mensagens privadas onde estaremos enviando informações.').setColor('#36393f')
-          .setImage(
-            `https://minecraftskinstealer.com/achievement/10/${user.username}/Confira+seu+privado!`,
-          )).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+        try {
+          const message = await reaction.message.channel.send(new MessageEmbed().setTitle('Criando seu ticket')
+            .setDescription('Pedimos que você redirecione-se as suas mensagens privadas onde estaremos enviando informações.').setColor('#36393f')
+            .setImage(
+              `https://minecraftskinstealer.com/achievement/10/${user.username}/Confira+seu+privado`))
+          try { await message.delete({ timeout: 2000 }) } catch (error) { }
+        } catch (error) {
+          const message = await reaction.message.channel.send(new MessageEmbed().setTitle('Não pudemos criar seu ticket!')
+            .setDescription('Pedimos que você ative o envio de mensagem privadas para prosseguir com a criação do ticket.').setColor('#36393f')
+            .setImage(
+              `https://minecraftskinstealer.com/achievement/6/${user.username}/DM fechada`))
+          try { await message.delete({ timeout: 2000 }) } catch (error) { }
+          return;
+        }
 
         const mainPainelMessage = await user.send(`${user}`, new MessageEmbed().setTitle('Converse conosco')
           .setDescription(`Você pode enviar mais informações sobre sua dúvida do ou no servidor aqui mesmo. Lembrando que, o sistema suporta imagens e links enviados.

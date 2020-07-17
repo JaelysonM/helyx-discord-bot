@@ -2,9 +2,11 @@ const { MessageEmbed } = require('discord.js')
 
 const { formatDateBR } = require('../utils/dateUtils')
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, command) => {
 
   message.delete();
+  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
   const report = {}
 
@@ -43,5 +45,6 @@ exports.run = async (client, message, args) => {
 }
 exports.help = {
   name: 'denunciar',
-  aliases: ['report']
+  aliases: ['report'],
+  description: 'Envie uma denúncia sobre um jogador para nossa equipe;'
 }

@@ -25,7 +25,7 @@ module.exports = (client) => class CommandListeners extends ListenerAdapter {
       archiveCommand = client.commands.get(client.aliases.get(command.slice(prefix.length)));
     }
     if (archiveCommand)
-      archiveCommand.run(client, message, args);
+      archiveCommand.run(client, message, args, archiveCommand);
 
 
   }

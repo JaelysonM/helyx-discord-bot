@@ -4,10 +4,11 @@ const { toMillis } = require('../utils/timeUtils');
 
 const { formatDateBR } = require('../utils/dateUtils');
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, command) => {
     message.delete()
-    if (!message.member.roles.cache.some(r => ["ADMIN", "GERENTE", "MASTER", "SLA.COM", "MANAGER"].includes(r.name)))
-        return message.channel.send(`Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+
     const config = client.configCache.get(message.guild.id);
     switch (args.length) {
         case 2:
@@ -72,5 +73,7 @@ Você terá \`\`10 segundos\`\` para escolher um motivo para a revisão de **${n
 }
 
 exports.help = {
-    name: "revisar"
+    name: "revisar",
+    roles: ['GERENTE'],
+    description: 'Responda a o pedido de revisão de um jogador;'
 }

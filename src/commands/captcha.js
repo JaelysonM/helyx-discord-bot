@@ -1,11 +1,12 @@
 const { MessageEmbed } = require('discord.js')
 const fs = require('fs')
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, command) => {
   const config = client.configCache.get(message.guild.id);
   message.delete();
 
-  if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("🚫 Você não tem permissão para executar este comando.").then(async message => { try { await message.delete({ timeout: 4000 }) } catch (error) { } })
+  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
   message.channel.send('Ao completar a verificação todos os canais aparecerão e este ficará oculto.')
   const captcha = await message.channel.send(new MessageEmbed()
@@ -24,5 +25,10 @@ exports.run = async (client, message, args) => {
   client.configCache.set(message.guild.id, configuration);
 }
 exports.help = {
-  name: 'captcha-message'
+  name: 'captcha-message',
+  roles: ['GERENTE'],
+  description: 'Cria a mensagem completa do captcha do servidor;'
+
+
+
 }

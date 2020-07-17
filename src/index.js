@@ -8,6 +8,7 @@ client.config = require('../config');
 client.commands = new Collection();
 client.aliases = new Collection();
 client.configCache = new Collection();
+client.rolesCommand = new Collection();
 
 
 client.accountTable = new db.table('accounts');
@@ -17,6 +18,7 @@ require('./controllers/TicketController')(client);
 require('./controllers/PunishController')(client);
 require('./controllers/AccountController')(client);
 require('./controllers/ConfigurationController')(client);
+require('./controllers/PermissionController')(client);
 
 fs.readdir('./src/events/', (err, files) => {
   if (err) console.error(err);
@@ -36,6 +38,7 @@ fs.readdir('./src/commands/', (err, files) => {
     const props = require(`./commands/${file}`);
     console.log(`\x1b[33m  ⤷\x1b[0m ${file} loaded`);
     client.commands.set(props.help.name, props);
+    client.rolesCommand.set(props.help.name, (props.help.roles ? props.help.roles : ['PLAYERS']))
     if (props.help.aliases) {
       props.help.aliases.forEach(alias => {
         client.aliases.set(alias, props.help.name);
@@ -43,6 +46,7 @@ fs.readdir('./src/commands/', (err, files) => {
     }
   });
 });
+
 
 
 client.login(client.config.token);

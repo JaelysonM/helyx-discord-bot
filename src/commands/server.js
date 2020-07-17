@@ -3,7 +3,9 @@ const { MessageEmbed } = require('discord.js')
 const api = require('../services/api')
 
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args, command) => {
+    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     try {
         const response = await api('redevanish.com').get('');
@@ -18,6 +20,7 @@ module.exports.run = async (client, message, args) => {
     }
 }
 exports.help = {
-    name: "server"
+    name: 'server',
+    description: 'Recebe informações sobre o servidor;'
 }
 

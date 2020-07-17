@@ -7,8 +7,11 @@ const { sleep } = require('../utils/fileUtils')
 const fs = require('fs')
 
 
-exports.run = async (client, message, args) => {
-  message.delete();
+exports.run = async (client, message, args, command) => {
+
+  message.delete()
+  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
   const guild = await client.getGuild(message.guild);
   const mappedGuild = Object.values(guild).filter(result => result != null);
@@ -18,8 +21,7 @@ exports.run = async (client, message, args) => {
     .setAuthor(`Atualização de configurações`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`)
     .setFooter(`Tentativa de configuração iniciada em ${formatDateBR(Date.now())}`).setColor('#ffd500').setImage(`https://minecraftskinstealer.com/achievement/11/${message.author.username}/Envie+um+arquivo+.json%21`)
     .setDescription(`\n\nVocê iniciou a **configuração** do servidor:\`\`\`fix\n${message.guild.name} ● (${parseFloat((mappedGuild.length / Object.keys(client.defaultConfigBody).length) * 100).toFixed(2).replace('.00', '') + '% configurado)'} \`\`\`\nComo existem muitas opções de customização, achamos mais cômodo você envia-lás por um arquivo __**json**__, caso você queira algum arquivo de base [clique aqui](https://bit.ly/2Orv3nX).\n\nReaja com  ❌  para cancelar, ou aguarde \`\`20s\`\` para **cancelar automaticamente**.\n\nDeseja baixar as configurações atuais? reaja com 🧾!`)).then(async msg => {
-      msg.react('❌')
-      msg.react('🧾')
+      await msg.react('❌').then(async msg => await msg.react('🧾').catch(() => { })).catch(() => { })
       const filter = (reaction, user) => {
         return user.id == message.author.id && (reaction.emoji.name == '❌' || reaction.emoji.name == '🧾');
       };
@@ -102,5 +104,7 @@ exports.run = async (client, message, args) => {
     )
 }
 exports.help = {
-  name: 'config'
+  name: 'config',
+  roles: ['GERENTE'],
+  description: 'Abre um painel de configurações do servidor;'
 }

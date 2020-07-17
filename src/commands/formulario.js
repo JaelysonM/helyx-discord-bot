@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js')
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, command) => {
+    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) !== undefined)
+        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     const embed = new MessageEmbed()
 
@@ -11,5 +13,6 @@ exports.run = async (client, message, args) => {
 }
 
 exports.help = {
-    name: "formulario"
+    name: 'formulario',
+    description: 'Recebe o formulário de aplicação a equipe;'
 }

@@ -38,9 +38,12 @@ module.exports = (client) => class BotListeners extends ListenerAdapter {
       const newUser = client.users.cache.find(user => user.username === username && user.discriminator == discriminator);
       const reportedName = embed.thumbnail.url.split('https://minotar.net/avatar/')[1];
       if (newUser) {
-        newUser.send(new MessageEmbed().setTitle(`Denúncia aceita e acusado punido - ${reportedName}!`).setDescription(`Sua denúncia foi **aceita**, foi averiguado as provas e o motivo inserido e foi possível aplicar a punição sobre. Caso você possua novas denúncias poderá criar novas denúncias e acabar ajudando a rede cada vez mais.
+        try {
+          newUser.send(new MessageEmbed().setTitle(`Denúncia aceita e acusado punido - ${reportedName}!`).setDescription(`Sua denúncia foi **aceita**, foi averiguado as provas e o motivo inserido e foi possível aplicar a punição sobre. Caso você possua novas denúncias poderá criar novas denúncias e acabar ajudando a rede cada vez mais.
 
         Pedimos que não faça flood de denúncias, pois poderá ficar sujeito a ser punido pelo tal motivo.`))
+
+        } catch (error) { }
       }
       const acceptChannel = await client.guilds.cache.get(config.attendanceServer).channels.cache.get(config.reportAcceptChannel);
 
@@ -65,10 +68,13 @@ module.exports = (client) => class BotListeners extends ListenerAdapter {
       reaction.message.edit(new MessageEmbed().setColor(embed.color).setThumbnail(embed.thumbnail.url).setFooter(embed.footer.text).setDescription(`${embed.description}\n\nPunição recusada em: **${formatDateBR(Date.now())}**\npor ***${user.username}***.`).setAuthor(embed.author.name, embed.author.proxyIconURL));
       const newUser = client.users.cache.find(user => user.username === username && user.discriminator == discriminator);
       if (newUser) {
-        newUser.send(new MessageEmbed().setTitle(`Denúncia negada - ${reportedName}!`).setDescription(`
-        Sua denúncia foi **negada** por falta de provas ou provas que são insuficientes para aplicar a punição ao jogador. Caso você possua mais provas para comprovar a suposta infração cometida pelo jogador, por favor, crie outra denúncia.
-        
-        Pedimos encarecidamente que não criem outra denúncia utilizando as mesmas provas que foram utilizadas nesta. Caso isso seja feito, você poderá ser punido pelo mesmo.`))
+        try {
+          newUser.send(new MessageEmbed().setTitle(`Denúncia negada - ${reportedName}!`).setDescription(`
+          Sua denúncia foi **negada** por falta de provas ou provas que são insuficientes para aplicar a punição ao jogador. Caso você possua mais provas para comprovar a suposta infração cometida pelo jogador, por favor, crie outra denúncia.
+          
+          Pedimos encarecidamente que não criem outra denúncia utilizando as mesmas provas que foram utilizadas nesta. Caso isso seja feito, você poderá ser punido pelo mesmo.`))
+        } catch (err) { }
+
       }
       const denyChannel = await client.guilds.cache.get(config.attendanceServer).channels.cache.get(config.reportRejectedChannel);
       denyChannel.send(new MessageEmbed()

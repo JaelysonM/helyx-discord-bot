@@ -1,11 +1,11 @@
 const { MessageEmbed } = require('discord.js')
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args, command) => {
 
     message.delete();
 
-    if (!message.member.hasPermission("MANAGE_MESSAGES"))
-        return message.channel.send(`Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 500 }) } catch (error) { } });
+    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     await message.author.createDM()
 
@@ -114,5 +114,7 @@ module.exports.run = async (client, message, args) => {
     }).catch(async () => message.channel.send(`Você está com o privado fechado, por favor abra para eu enviar as informações!`));
 }
 exports.help = {
-    name: "embed"
+    name: "embed",
+    roles: ['AJUDANTE'],
+    description: 'Crie um embed facilmente;'
 }

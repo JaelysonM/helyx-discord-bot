@@ -1,10 +1,12 @@
 const { MessageEmbed } = require('discord.js')
 
 
-exports.run = async (client, message, args) => {
+exports.run = async (client, message, args, command) => {
 
   message.delete();
-  if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("🚫 Você não tem permissão para executar este comando.").then(message => message.delete({ timeout: 4000 }))
+  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+
   const config = client.configCache.get(message.guild.id);
   if (!args[0]) return message.reply(`🚫 Use: ${config.prefix}prefix <prefixo>.`).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } })
 
@@ -23,5 +25,7 @@ exports.run = async (client, message, args) => {
 
 }
 exports.help = {
-  name: "prefix"
+  name: "prefix",
+  roles: ['GERENTE'],
+  description: 'Altera o prefixo dos comandos do servidor;'
 }
