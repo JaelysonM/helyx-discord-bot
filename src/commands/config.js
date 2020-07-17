@@ -28,6 +28,7 @@ exports.run = async (client, message, args, command) => {
       const filter = (reaction, user) => {
         return user.id == message.author.id && (reaction.emoji.name == '❌' || reaction.emoji.name == '🧾');
       };
+
       const collector = message.channel.createMessageCollector(a => a.author.id == message.author.id, { time: 1000 * 20, max: 1 });
       const collectorReaction = msg.createReactionCollector(filter, { time: 1000 * 20, max: 1 });
 
