@@ -1,37 +1,3 @@
 {
-  "token": "NzExODM0NzM5OTU0NDE3NzA1.Xsbocg.Hhbvf_7vTM9vdGf5AMlWvqCD9AU",
-  "prefix": "&",
-  "membro": "Membro",
-
-  "captchaChannel": "730282883410952214",
-  "captchaMessage": "730636748748619882",
-  "afterCaptchaRole": "730281526750740541",
-  "attendancePainelChannel": "730284028669722644",
-  "attendancePainelMessage": "731295408479010958",
-  "mainServer": "707404941001621578",
-  "attendanceServer": "730509406529126481",
-  "ticketsCategory": "730514079885820014",
-  "welcomeChannel": "730282766633009195",
-  "spammerRole": "730293162538434682",
-
-  "ticketsEnabled": true,
-  "ticketDelay": true,
-  "ticketsCapacity": 50,
-  "staffRoles": [
-    "MASTER",
-    "GERENTE",
-    "MANAGER",
-    "ADMIN",
-    "MODERADOR",
-    "AJUDANTE"
-  ],
-  "mutedRole": "730281527648452661",
-  "punishChannel": "730284117991882762",
-  "appelChannel": "730284137021177866",
-  "reportChannel": "732399193120833617",
-
-  "formMinigames": "http://bit.ly/formmini",
-  "formSurvival": "http://bit.ly/formsurv",
-  "formRevisao": "http://bit.ly/formrevisao",
-  "formRegras": "http://bit.ly/formregras"
+  "token": "NzExODM0NzM5OTU0NDE3NzA1.Xsbocg.Hhbvf_7vTM9vdGf5AMlWvqCD9AU"
 }
