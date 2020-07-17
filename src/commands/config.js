@@ -21,7 +21,12 @@ exports.run = async (client, message, args, command) => {
     .setAuthor(`Atualização de configurações`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`)
     .setFooter(`Tentativa de configuração iniciada em ${formatDateBR(Date.now())}`).setColor('#ffd500').setImage(`https://minecraftskinstealer.com/achievement/11/${message.author.username}/Envie+um+arquivo+.json%21`)
     .setDescription(`\n\nVocê iniciou a **configuração** do servidor:\`\`\`fix\n${message.guild.name} ● (${parseFloat((mappedGuild.length / Object.keys(client.defaultConfigBody).length) * 100).toFixed(2).replace('.00', '') + '% configurado)'} \`\`\`\nComo existem muitas opções de customização, achamos mais cômodo você envia-lás por um arquivo __**json**__, caso você queira algum arquivo de base [clique aqui](https://bit.ly/2Orv3nX).\n\nReaja com  ❌  para cancelar, ou aguarde \`\`20s\`\` para **cancelar automaticamente**.\n\nDeseja baixar as configurações atuais? reaja com 🧾!`)).then(async msg => {
-      await msg.react('❌').then(async msg => await msg.react('🧾').catch(() => { })).catch(() => { })
+      try {
+        await msg.react('❌')
+        await msg.react('🧾')
+      } catch (error) {
+
+      }
       const filter = (reaction, user) => {
         return user.id == message.author.id && (reaction.emoji.name == '❌' || reaction.emoji.name == '🧾');
       };
