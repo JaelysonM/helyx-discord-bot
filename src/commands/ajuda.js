@@ -41,6 +41,8 @@ exports.run = async (client, message, args, command) => {
             .setColor(`#36393f`)).then(async message => { try { await message.delete({ timeout: 10000 }) } catch (error) { } });
     }
 
+    try { await painel.delete({ timeout: 1000 * 10 }); } catch (error) { }
+
 }
 
 exports.help = {
