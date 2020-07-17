@@ -47,8 +47,6 @@ fs.readdir('./src/commands/', (err, files) => {
   });
 });
 
-
-
 client.login(client.config.token);
 
 
