@@ -39,7 +39,7 @@ module.exports = (client) => class BotListeners extends ListenerAdapter {
       const reportedName = embed.thumbnail.url.split('https://minotar.net/avatar/')[1];
       if (newUser) {
         try {
-          newUser.send(new MessageEmbed().setTitle(`Denúncia aceita e acusado punido - ${reportedName}!`).setDescription(`Sua denúncia foi **aceita**, foi averiguado as provas e o motivo inserido e foi possível aplicar a punição sobre. Caso você possua novas denúncias poderá criar novas denúncias e acabar ajudando a rede cada vez mais.
+          newUser.send(new MessageEmbed().setTitle(`Denúncia aceita e acusado punido - ${reportedName}!`).setDescription(`Sua denúncia foi **aceita**, foi averiguado as provas e o motivo inserido e foi possível aplicar a punição sobre. Caso você possua novas provas de novos reportes poderá criar novas denúncias e acabar ajudando a rede cada vez mais.
 
         Pedimos que não faça flood de denúncias, pois poderá ficar sujeito a ser punido pelo tal motivo.`))
 

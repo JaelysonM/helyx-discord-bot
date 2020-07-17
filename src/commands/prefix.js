@@ -26,6 +26,6 @@ exports.run = async (client, message, args, command) => {
 }
 exports.help = {
   name: "prefix",
-  roles: ['GERENTE'],
+  roles: ['MASTER'],
   description: 'Altera o prefixo dos comandos do servidor;'
 }

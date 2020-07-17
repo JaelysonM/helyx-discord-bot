@@ -10,6 +10,9 @@ exports.run = async (client, message, args, command) => {
         return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     const config = client.configCache.get(message.guild.id);
+    if (!config.reviewsEnabled) {
+        return message.channel.send(`🚫 A criação de revisões foi desabilitada por um superior.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+    }
     switch (args.length) {
         case 2:
             const nickname = args[0];
@@ -55,6 +58,7 @@ Você terá \`\`10 segundos\`\` para escolher um motivo para a revisão de **${n
                             message.channel.send(new MessageEmbed()
                                 .setAuthor(`Revisão efetuada com sucesso!`, `https://gamepedia.cursecdn.com/minecraft_gamepedia/thumb/0/0f/Lime_Dye_JE2_BE2.png/150px-Lime_Dye_JE2_BE2.png?version=689addf38f5c21626ee91ec07e6e8670`)
                                 .setDescription(`\nVocê selecionou o motivo \`\`${reason}\`\` e este resultado da revisão foi notificado no canal #revisões em nosso servidor principal;`).setFooter(`O resultado da revisão foi enviada ${formatDateBR(Date.now())}`)).then(async message => { try { await message.delete({ timeout: 10000 }) } catch (error) { } });
+
                             appelChannel.send(new MessageEmbed().setDescription(`Um membro punido no servidor recentemente acabou de receber o resultado de
                          sua revisão, confira abaixo algumas informações sobre a revisão, dentre elas
                          membro punido, status e motivo.   
@@ -73,7 +77,7 @@ Você terá \`\`10 segundos\`\` para escolher um motivo para a revisão de **${n
 }
 
 exports.help = {
-    name: "revisar",
-    roles: ['GERENTE'],
+    name: 'revisar',
+    roles: ['ADMIN'],
     description: 'Responda a o pedido de revisão de um jogador;'
 }

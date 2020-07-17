@@ -115,6 +115,6 @@ module.exports.run = async (client, message, args, command) => {
 }
 exports.help = {
     name: "embed",
-    roles: ['AJUDANTE'],
+    roles: ['GERENTE'],
     description: 'Crie um embed facilmente;'
 }

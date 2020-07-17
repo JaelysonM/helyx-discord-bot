@@ -73,9 +73,6 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
               return;
             }
             memberWhoReacted.roles.add(config.afterCaptchaRole);
-
-
-            const config = client.configCache.get(reaction.message.guild.id);
             if (config.welcomeMessage != null) {
               function replacer(key, value) {
                 if (typeof value === 'string') {
@@ -108,12 +105,14 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
               if (info.muteTimestamp != 0 && info.muteTimestamp > Date.now()) memberWhoReacted.roles.add(config.mutedRole);
             });
 
-            user.send(new MessageEmbed().setThumbnail('https://media3.giphy.com/media/chiLb8yx7ZD1Pdx6CF/giphy.gif').setTitle('Verificado!').setColor('#00f7ff')
-              .setDescription(`***Você completou a verificação no servidor.***
+            try {
+              await user.send(new MessageEmbed().setThumbnail('https://media3.giphy.com/media/chiLb8yx7ZD1Pdx6CF/giphy.gif').setTitle('Verificado!').setColor('#00f7ff')
+                .setDescription(`***Você completou a verificação no servidor.***
 
-            A partir deste momento você tem acesso a todos os canais do servidor disponível para membros.
-            
-            Evite ser punido de nossos servidores, confira os canais de regras.`));
+          A partir deste momento você tem acesso a todos os canais do servidor disponível para membros.
+          
+          Evite ser punido de nossos servidores, confira os canais de regras.`));
+            } catch (error) { }
             break;
         }
       } else {

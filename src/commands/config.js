@@ -107,6 +107,6 @@ exports.run = async (client, message, args, command) => {
 }
 exports.help = {
   name: 'config',
-  roles: ['GERENTE'],
+  roles: ['MASTER'],
   description: 'Abre um painel de configurações do servidor;'
 }

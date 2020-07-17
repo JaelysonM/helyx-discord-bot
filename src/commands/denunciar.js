@@ -11,6 +11,10 @@ exports.run = async (client, message, args, command) => {
   const report = {}
 
   const config = client.configCache.get(message.guild.id);
+
+  if (!config.reportsEnabled) {
+    return message.channel.send(`🚫 A criação de denúncias foi desabilitada por um superior.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+  }
   await message.channel.send(new MessageEmbed()
     .setAuthor(`${message.author.username}`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`)
     .setDescription(`Informe o nickname do jogador que deseja denúnciar.\nCaso forneça um nickname falso poderá ser punido!`)).then(async msg => {

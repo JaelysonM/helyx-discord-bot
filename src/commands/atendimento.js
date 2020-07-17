@@ -19,6 +19,6 @@ exports.run = async (client, message, args, command) => {
 }
 exports.help = {
     name: "marcella",
-    roles: ['GERENTE'],
+    roles: ['MASTER'],
     description: 'Cria a mensagem do atendimento dos tickets do servidor;'
 }

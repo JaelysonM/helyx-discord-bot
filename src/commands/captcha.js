@@ -26,7 +26,7 @@ exports.run = async (client, message, args, command) => {
 }
 exports.help = {
   name: 'captcha-message',
-  roles: ['GERENTE'],
+  roles: ['MASTER'],
   description: 'Cria a mensagem completa do captcha do servidor;'
 
 
