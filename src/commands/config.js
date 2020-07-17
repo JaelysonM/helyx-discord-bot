@@ -16,7 +16,6 @@ exports.run = async (client, message, args, command) => {
   const guild = await client.getGuild(message.guild);
   const mappedGuild = Object.values(guild).filter(result => result != null);
 
-
   await message.channel.send(new MessageEmbed()
     .setAuthor(`Atualização de configurações`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`)
     .setFooter(`Tentativa de configuração iniciada em ${formatDateBR(Date.now())}`).setColor('#ffd500').setImage(`https://minecraftskinstealer.com/achievement/11/${message.author.username}/Envie+um+arquivo+.json%21`)
