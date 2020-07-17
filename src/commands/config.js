@@ -24,9 +24,7 @@ exports.run = async (client, message, args, command) => {
       try {
         await msg.react('❌')
         await msg.react('🧾')
-      } catch (error) {
-
-      }
+      } catch (error) { }
       const filter = (reaction, user) => {
         return user.id == message.author.id && (reaction.emoji.name == '❌' || reaction.emoji.name == '🧾');
       };
