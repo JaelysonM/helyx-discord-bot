@@ -77,7 +77,10 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
         .setThumbnail('https://media.discordapp.net/attachments/678369832147615775/688730080440352823/RespTicket.png')
         .setColor('#42f5cb')).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } });
     } else {
-      message.author.send(':x: Você não possui um ticket aberto, logo não computamos esta mensagem!').then(async message => { try { await message.delete({ timeout: 1500 }) } catch (error) { } });
+      try {
+        await message.author.send(':x: Você não possui um ticket aberto, logo não computamos esta mensagem!').then(async message => { try { await message.delete({ timeout: 1500 }) } catch (error) { } });
+
+      } catch (error) { }
     }
   }
 
@@ -101,6 +104,7 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
 
     const account = await client.getAccount(user, reaction.message.guild);
     if (config.ticketDelay && account.ticketTimestamp != 0 && account.ticketTimestamp > Date.now()) {
+
       try {
         const message = await user.send(new MessageEmbed().setTitle('Intervalo para criação de ticket!')
           .setDescription(`${user} Você está em um intervalo de criação de tickets!`).setColor('#36393f')

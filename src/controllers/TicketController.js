@@ -12,9 +12,9 @@ module.exports = client => {
         if (ticket.painelMsg !== null) ticket.painelMsg.delete();
         if (ticket.holderMessage !== null) ticket.holderMessage.delete();
         if (ticket.channel !== null) ticket.channel.delete();
-        ticket.user.send(embed)
+        await ticket.user.send(embed)
         delete client.tickets[ticket.user.id];
-      } catch (err) { console.log(err) }
+      } catch (err) { }
 
     },
     client.capacityTick = () => {
