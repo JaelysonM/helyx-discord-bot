@@ -125,9 +125,10 @@ module.exports.run = async (client, message, args, command) => {
                         message.delete();
                         break;
                 }
+                try { await msg.delete({ timeout: toMillis(15) }) } catch (error) { }
             });
 
-            try { await message.delete({ timeout: toMillis(15) }) } catch (error) { }
+
         })
 
 }
