@@ -24,16 +24,20 @@ module.exports = (client) => class TicketStaffChatListeners extends ListenerAdap
       ticket.timestamp = Date.now() + minutesToMillis(10);
 
       if (message.attachments.size > 0) {
-        await ticket.user.send(new MessageEmbed()
-          .setTitle(`${message.author.username} respondeu:`)
-          .setDescription('Enviou uma imagem:').setImage(message.attachments.array()[0].url)
-          .setFooter('Todas as mensagem enviadas neste canal serão redirecionadas; ')
-          .setTimestamp(Date.now()));
+        try {
+          await ticket.user.send(new MessageEmbed()
+            .setTitle(`${message.author.username} respondeu:`)
+            .setDescription('Enviou uma imagem:').setImage(message.attachments.array()[0].url)
+            .setFooter('Todas as mensagem enviadas neste canal serão redirecionadas; ')
+            .setTimestamp(Date.now()));
+        } catch (error) { }
       } else {
-        await ticket.user.send(new MessageEmbed()
-          .setTitle(`${message.author.username} respondeu:`)
-          .setDescription(message.content).setFooter('Todas as mensagem enviadas neste canal serão redirecionadas; ')
-          .setTimestamp(Date.now()));
+        try {
+          await ticket.user.send(new MessageEmbed()
+            .setTitle(`${message.author.username} respondeu:`)
+            .setDescription(message.content).setFooter('Todas as mensagem enviadas neste canal serão redirecionadas; ')
+            .setTimestamp(Date.now()));
+        } catch (error) { }
       }
       if (ticket.channel != null) {
         await ticket.channel.send(new MessageEmbed()

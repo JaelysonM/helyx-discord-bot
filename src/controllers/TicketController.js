@@ -12,8 +12,10 @@ module.exports = client => {
         if (ticket.painelMsg !== null) ticket.painelMsg.delete();
         if (ticket.holderMessage !== null) ticket.holderMessage.delete();
         if (ticket.channel !== null) ticket.channel.delete();
-        await ticket.user.send(embed)
         delete client.tickets[ticket.user.id];
+        try {
+          await ticket.user.send(embed)
+        } catch (error) { }
       } catch (err) { }
 
     },

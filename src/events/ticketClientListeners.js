@@ -24,7 +24,9 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
 
       if (isNumber(message.content) && parseInt(message.content) <= 8 && parseInt(message.content) > 0) {
         messageContent = config.ticketPresetMessages[parseInt(message.content) - 1];
-        ticket.user.send(messageContent);
+        try {
+          ticket.user.send(messageContent);
+        } catch (error) { }
         return;
       }
       messageContent = message.content;
@@ -47,11 +49,13 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
           });
         ticket.channel = ticketChat;
 
-        ticket.user.send(new MessageEmbed()
-          .setTitle('Este processo pode demorar alguns segundos!')
-          .setDescription('Sua mensagem está sendo encaminhada para a central de tickets, quando recebermos a mensagem você será notificado.')
-          .setThumbnail('https://media.discordapp.net/attachments/678369832147615775/688730074077331525/AlertTicket.png')
-          .setColor('#f5d442'));
+        try {
+          ticket.user.send(new MessageEmbed()
+            .setTitle('Este processo pode demorar alguns segundos!')
+            .setDescription('Sua mensagem está sendo encaminhada para a central de tickets, quando recebermos a mensagem você será notificado.')
+            .setThumbnail('https://media.discordapp.net/attachments/678369832147615775/688730074077331525/AlertTicket.png')
+            .setColor('#f5d442'));
+        } catch (error) { }
       }
       ticket.timestamp = Date.now() + minutesToMillis(10);
 
@@ -89,6 +93,8 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
     if (user.bot) return;
     if (!reaction.message.channel.name.includes('atendimento')) return;
     reaction.users.remove(user);
+
+
     const config = client.configCache.get(reaction.message.guild.id);
     if (!config.ticketsEnabled) {
       try {
@@ -112,7 +118,6 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
             `https://minecraftskinstealer.com/achievement/17/Aguarde:/${formatTimer(account.ticketTimestamp - Date.now())}`,
           ))
         try { await message.delete({ timeout: 10000 }) } catch (error) { }
-
       } catch (error) { }
 
       return;
@@ -122,11 +127,16 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
     const ticketGuild = client.guilds.cache.get(config.attendanceServer);
     if (client.tickets[user.id]) return;
 
-
-
     switch (reaction.emoji.name) {
       case '❓':
         try {
+          const mainPainelMessage = await user.send(`${user}`, new MessageEmbed().setTitle('Converse conosco')
+            .setDescription(`Você pode enviar mais informações sobre sua dúvida do ou no servidor aqui mesmo. Lembrando que, o sistema suporta imagens e links enviados.
+  
+                    **Perguntas frequentemente enviadas!**
+                    Caso sua dúvida seja umas das listadas abaixo, basta enviar o ID correspondente a sua dúvida neste canal! Caso contrario, prossiga informando sua dúvida.
+                    \`\`\`01 » Formulário de integração a equipe.\n02 » Formulário de revisão de punição.\n03 » Regras do servidor.\n04 » Como vincular sua conta e vantagens.\n05 » Solicitação e requisitos youtuber.\n06 » Pedido de reembolso.\n07 » Como efetuar uma compra no servidor.\n08 » É possível transferir vip de conta?\`\`\`
+                    `));
           const message = await reaction.message.channel.send(new MessageEmbed().setTitle('Criando seu ticket')
             .setDescription('Pedimos que você redirecione-se as suas mensagens privadas onde estaremos enviando informações.').setColor('#36393f')
             .setImage(
@@ -136,18 +146,11 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
           const message = await reaction.message.channel.send(new MessageEmbed().setTitle('Não pudemos criar seu ticket!')
             .setDescription('Pedimos que você ative o envio de mensagem privadas para prosseguir com a criação do ticket.').setColor('#36393f')
             .setImage(
-              `https://minecraftskinstealer.com/achievement/6/${user.username}/DM fechada`))
+              `https://minecraftskinstealer.com/achievement/6/${user.username}/Sua+DM+está+fechada!`))
           try { await message.delete({ timeout: 2000 }) } catch (error) { }
           return;
         }
 
-        const mainPainelMessage = await user.send(`${user}`, new MessageEmbed().setTitle('Converse conosco')
-          .setDescription(`Você pode enviar mais informações sobre sua dúvida do ou no servidor aqui mesmo. Lembrando que, o sistema suporta imagens e links enviados.
-  
-                    **Perguntas frequentemente enviadas!**
-                    Caso sua dúvida seja umas das listadas abaixo, basta enviar o ID correspondente a sua dúvida neste canal! Caso contrario, prossiga informando sua dúvida.
-                    \`\`\`01 » Formulário de integração a equipe.\n02 » Formulário de revisão de punição.\n03 » Regras do servidor.\n04 » Como vincular sua conta e vantagens.\n05 » Solicitação e requisitos youtuber.\n06 » Pedido de reembolso.\n07 » Como efetuar uma compra no servidor.\n08 » É possível transferir vip de conta?\`\`\`
-                    `));
         const holderMessage = await user.send(new MessageEmbed()
           .setTitle('Aguarde algum atendente...')
           .setDescription('Dentro de alguns momentos ele será arrematado e respondido, fique a vontade para falar sua dúvida.\n\nNão se preocupe se você não for atendido ele irá fechar\nautomaticamente, e você poderá abrir um novo posteriormente.')
