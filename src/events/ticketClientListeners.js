@@ -129,8 +129,9 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
 
     switch (reaction.emoji.name) {
       case '❓':
+        let mainPainelMessage = null;
         try {
-          const mainPainelMessage = await user.send(`${user}`, new MessageEmbed().setTitle('Converse conosco')
+          mainPainelMessage = await user.send(`${user}`, new MessageEmbed().setTitle('Converse conosco')
             .setDescription(`Você pode enviar mais informações sobre sua dúvida do ou no servidor aqui mesmo. Lembrando que, o sistema suporta imagens e links enviados.
   
                     **Perguntas frequentemente enviadas!**
