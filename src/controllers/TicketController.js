@@ -35,8 +35,6 @@ module.exports = client => {
       }, 1000 * 60);
     },
     client.ticketsGC = () => {
-
-      daysToMillis(1)
       setInterval(async () => {
         Object.values(client.tickets).filter(result => result.timestamp < Date.now()).forEach(result => {
           client.deleteTicket(result, new MessageEmbed()
@@ -44,9 +42,9 @@ module.exports = client => {
             .setDescription(`Seu ticket foi encerrado em nossa central por: \`\`ausência\`\`\n\n${result.holder == null ? `Você poderá criar um novo ticket sem nenhum intervalo de tempo, visto que não havia nenhum atendente com seu ticket;` : `Você terá que esperar \`\`3 horas\`\`\ para criar outro ticket para nós`}\nIsso ocorre com todos os tickets fechados em nossa central.\n\nFechado em: \`\`${formatDateBR(Date.now())}\`\``)
             .setThumbnail(`https://media.discordapp.net/attachments/678369832147615775/688730074077331525/AlertTicket.png`)
             .setColor(`#f5d442`))
-          const config = client.configCache.get(result.guild.id);
+          const config = client.configCache.get(result.mainGuild.id);
           if (result.holder != null && config.ticketDelay)
-            client.updateValues(result.user, result.guild, {
+            client.updateValues(result.user, result.mainGuild, {
               ticketTimestamp: Date.now() + hoursToMillis(3)
             })
 

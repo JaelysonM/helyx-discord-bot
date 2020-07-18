@@ -89,9 +89,9 @@ module.exports = (client) => class TicketStaffChatListeners extends ListenerAdap
           .setDescription(`Seu ticket foi encerrado em nossa central por: \`\`${user.username}#${user.discriminator}\`\`\n\nVocê terá que esperar \`\`3 horas\`\` para criar outro ticket para nós;\nIsso ocorre com todos os tickets fechados em nossa central.\n\nFechado em: \`\`${formatDateBR(Date.now())}\`\``)
           .setThumbnail('https://media.discordapp.net/attachments/678369832147615775/688730074077331525/AlertTicket.png')
           .setColor('#f5d442'));
-        const config = client.configCache.get(ticket.guild.id);
+        const config = client.configCache.get(ticket.mainGuild.id);
         if (config.ticketDelay)
-          client.updateValues(ticket.user, ticket.guild, { ticketTimestamp: Date.now() + hoursToMillis(3) });
+          client.updateValues(ticket.user, ticket.mainGuild, { ticketTimestamp: Date.now() + hoursToMillis(3) });
         break;
     }
   }
