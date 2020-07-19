@@ -57,12 +57,14 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
 
   async onGuildMemberAdd(member) {
     const config = client.configCache.get(member.guild.id);
-    await member.guild.channels.cache.get(config.captchaChannel).messages.fetch(config.captchaMessage).then((message) => message.reactions.cache.get('✅').users.remove(member.user));
+    if (config.isMainServer)
+      await member.guild.channels.cache.get(config.captchaChannel).messages.fetch(config.captchaMessage).then((message) => message.reactions.cache.get('✅').users.remove(member.user));
   }
 
   async onReactionAddListener(reaction, user) {
     if (reaction.message.guild == null || reaction.message.channel == null || user.bot) return;
     const config = client.configCache.get(reaction.message.guild.id);
+    if (!config.isMainServer) return;
     if (reaction.message.channel.id === config.captchaChannel) {
       if (reaction.message.id === config.captchaMessage) {
         const memberWhoReacted = reaction.message.guild.members.cache.find((member) => member.id === user.id);
