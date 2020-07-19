@@ -27,11 +27,13 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
         if (urlMatch >= 0) {
           if (!member.roles.cache.has(config.spammerRole)) {
             presenceQueue[presence.user] = {};
-            await presence.user.send(new MessageEmbed().setThumbnail('https://media1.giphy.com/media/BT4ygwV9vgwAU/giphy.gif?cid=ecf05e47e912f692eb945be82987cdfc10414cf3e9709a37&rid=giphy.gif').setTitle('Punição! - __Divulgação__').setColor('#525252')
-              .setFooter(`A punição foi aplicada ${formatDateBR(Date.now())}`)
-              .setDescription(` || ${presence.user} ||
+            try {
+              await presence.user.send(new MessageEmbed().setThumbnail('https://media1.giphy.com/media/BT4ygwV9vgwAU/giphy.gif?cid=ecf05e47e912f692eb945be82987cdfc10414cf3e9709a37&rid=giphy.gif').setTitle('Punição! - __Divulgação__').setColor('#525252')
+                .setFooter(`A punição foi aplicada ${formatDateBR(Date.now())}`)
+                .setDescription(` || ${presence.user} ||
   
               Em nosso sistema é feito uma averiguação de \`\`anti-divulgação\`\` pelos status, por tanto foi averiguado que você está com uma mensagem proibida em nosso sistema.\n\nPara a punição ser revogada, basta retirar o \`\`status personalisado!\`\``));
+            } catch (error) { }
             delete presenceQueue[presence.user];
             if (member.roles.cache.some((r) => config.staffRoles.includes(r.name))) return;
             member.roles.add(config.spammerRole);
