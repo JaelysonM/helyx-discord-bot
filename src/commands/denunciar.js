@@ -24,7 +24,7 @@ exports.run = async (client, message, args, command) => {
         if (!report.reported) {
           report.reported = message.content;
           await msg.edit(new MessageEmbed()
-            .setAuthor(`${message.author.username}`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`).setColor('#fff312').setThumbnail(`https://minotar.net/avatar/${report.reported}`)
+            .setAuthor(`${message.author.username}`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`).setColor('#fff312').setThumbnail(`https://minotar.net/avatar/${report.reported.replace(' ', '+')}`)
             .setDescription(`Jogador à ser denunciado: **${report.reported}**\n\nInforme agora um motivo ou prova para compor sua denúncia;\nNós aceitamos \`\`links, de imagens ou vídeos\`\` como provas.`))
         } else {
           report.reason = message.content;
@@ -33,7 +33,7 @@ exports.run = async (client, message, args, command) => {
             .setDescription(`Jogador à ser denunciado: **${report.reported}**\nMotivo/prova da denúncia: **${report.reason}**\n\nSua denúncia foi criada com sucesso, em instantes ela será encaminhada para nossa equipe, onde ela será analisada.\n`).setFooter('Denúncia feita em ' + formatDateBR(Date.now())))
           const reportChannel = await client.guilds.cache.get(config.attendanceServer).channels.cache.get(config.reportChannel);
           reportChannel.send(new MessageEmbed()
-            .setAuthor(`${message.author.username}#${message.author.discriminator} - Nova denúncia!`, `https://media0.giphy.com/media/geKGJ302nQe60eJnR9/giphy.gif`).setColor('#ff2a00').setThumbnail(`https://minotar.net/avatar/${report.reported}`)
+            .setAuthor(`${message.author.username}#${message.author.discriminator} - Nova denúncia!`, `https://media0.giphy.com/media/geKGJ302nQe60eJnR9/giphy.gif`).setColor('#ff2a00').setThumbnail(`https://minotar.net/avatar/${report.reported.replace(' ', '+')}`)
             .setDescription(`|| @everyone ||\nJogador denunciado: **${report.reported}**\nMotivo/prova da denúncia: **${report.reason}**`).setFooter('Denúncia feita em ' + formatDateBR(Date.now()))).then(m => {
               m.react('✅')
               m.react('❌')

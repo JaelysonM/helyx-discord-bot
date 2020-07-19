@@ -294,5 +294,6 @@ exports.run = async (client, message, args, command) => {
 exports.help = {
   name: 'dashboard',
   aliases: ['dshbd'],
+  roles: ['MASTER'],
   description: 'Abra o painel de configurações rápidas;'
 }
