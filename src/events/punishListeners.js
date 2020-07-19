@@ -16,6 +16,7 @@ module.exports = (client) => class BotListeners extends ListenerAdapter {
   }
   async onReactionAddListener(reaction, user) {
     if (user.bot) return;
+    if (!reaction) return;
     if (reaction.message.guild == null) return;
     const config = client.configCache.get(reaction.message.guild.id);
     if (reaction.message.channel.id != config.reportChannel) return;

@@ -64,6 +64,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
   }
 
   async onReactionAddListener(reaction, user) {
+    if (!reaction) return;
     if (reaction.message.guild == null || reaction.message.channel == null || user.bot) return;
     const config = client.configCache.get(reaction.message.guild.id);
     if (!config.isMainServer) return;
