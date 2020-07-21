@@ -24,6 +24,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
 
       if (customStatus && customStatus.state != null) {
         const urlMatch = customStatus.state.search(/((?:discord\.gg|discordapp\.com|www\.|htStp|invite))/g);
+        if (member.roles.cache.some((r) => config.staffRoles.includes(r.name))) return;
         if (urlMatch >= 0) {
           if (!member.roles.cache.has(config.spammerRole)) {
             presenceQueue[presence.user] = {};
@@ -32,10 +33,9 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
                 .setFooter(`A punição foi aplicada ${formatDateBR(Date.now())}`)
                 .setDescription(` || ${presence.user} ||
   
-              Em nosso sistema é feito uma averiguação de \`\`anti-divulgação\`\` pelos status, por tanto foi averiguado que você está com uma mensagem proibida em nosso sistema.\n\nPara a punição ser revogada, basta retirar o \`\`status personalisado!\`\``));
+              Em nosso sistema é feito uma averiguação de \`\`anti-divulgação\`\` pelos status, por tanto foi averiguado que você está com uma mensagem proibida em nosso sistema.\n\nPara a punição ser revogada, basta retirar o \`\`status personalizado!\`\``));
             } catch (error) { }
             delete presenceQueue[presence.user];
-            if (member.roles.cache.some((r) => config.staffRoles.includes(r.name))) return;
             member.roles.add(config.spammerRole);
             member.roles.remove(config.afterCaptchaRole);
           }
