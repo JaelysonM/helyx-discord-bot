@@ -1,6 +1,8 @@
 'use-strict'
 const { Client, Collection } = require('discord.js');
 
+
+
 const fs = require('fs');
 const db = require('quick.db');
 const client = new Client({ disableEveryone: true });

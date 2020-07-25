@@ -1,4 +1,6 @@
 
+const { toMillis, hoursToMillis, daysToMillis } = require('../utils/timeUtils');
+
 module.exports = client => {
   client.defaultConfigBody = {
     welcomeMessage: null,
@@ -28,6 +30,36 @@ module.exports = client => {
     punishChannel: null,
     appelChannel: null,
     reportChannel: null,
+    punishes: {
+      1: {
+        timestamp: hoursToMillis(2),
+        name: 'Ofensa a membros da equipe.'
+      },
+      2: {
+        timestamp: hoursToMillis(3),
+        name: 'Ofensa a jogadores.'
+      },
+      3: {
+        timestamp: hoursToMillis(5),
+        name: 'Discórdia no bate-papo.'
+      },
+      4: {
+        timestamp: hoursToMillis(3),
+        name: 'Divulgação. (Servidores)'
+      },
+      5: {
+        timestamp: hoursToMillis(4),
+        name: 'Divulgação. (Links)'
+      },
+      6: {
+        timestamp: hoursToMillis(2),
+        name: 'Mensagens falsas/Chat Fake.'
+      },
+      7: {
+        timestamp: hoursToMillis(3),
+        name: ' Comércio não autorizado.'
+      }
+    },
     ticketPresetMessages: [`O link do formulário para ajudante da network são:
 
       > Factions e RankUP: http://bit.ly/formmini
