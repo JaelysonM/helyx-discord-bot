@@ -6,6 +6,7 @@ module.exports = client => {
     minecraftAccount: null,
     punishTimes: 0,
   },
+
     client.getAccount = async (user, guild) => {
       const data = await client.accountTable.get(user.id + '_' + guild.id);
       return { ...client.defaultBody, ...data }
