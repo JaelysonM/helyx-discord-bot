@@ -37,7 +37,7 @@ module.exports.run = async (client, message, args, command) => {
                         return;
                     }
                     client.channels.cache.get(config.punishChannel).send(new MessageEmbed()
-                        .setDescription(`Um membro foi punido do servidor de discord recentemente, confira abaixo algumas informações sobre a punição, dentre elas quem aplicou, motivo e membro punido.\n⠀\`\`\`\ Membro punido: ${member.user.tag} \n Motivo da punição: Ofensa a membros da equipe. \n Punição aplicada por: ${message.author.tag} \`\`\`\ `)
+                        .setDescription(`Um membro foi punido do servidor de discord recentemente, confira abaixo algumas informações sobre a punição, dentre elas quem aplicou, motivo e membro punido.\n⠀\`\`\`\ Membro punido: ${member.user.tag} \n Motivo da punição: ${punish.name}. \n Punição aplicada por: ${message.author.tag} \`\`\`\ `)
                         .setFooter('A punição foi aplicada ' + formatDateBR(Date.now())));
                     client.updateValues(member.user, member.guild, {
                         muteTimestamp: punish.timestamp + Date.now(),
