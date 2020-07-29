@@ -11,7 +11,7 @@ module.exports = (client) => class SpamListeners extends ListenerAdapter {
     if (message.member == null) return;
     const content = message.content;
     if (content.startsWith("discord.gg/") || content.startsWith(".gg") || content.startsWith("https:") || content.startsWith("http:") || content.startsWith(".me") || content.startsWith('prnt.sc/') || content.startsWith("focus") || content.startsWith("vanish") || content.startsWith("community") || content.startsWith("stone") || content.startsWith("redesky") || content.startsWith("landwars") || content.startsWith("caralho") || content.startsWith("puta") || content.startsWith("fdp") || content.startsWith("cu") || content.startsWith("pnc") || content.startsWith("pau") || content.startsWith("lixo") || content.startsWith("seu merda")) {
-      if (message.member.hasPermission(8)) {
+      if (!message.member.hasPermission(8)) {
         message.delete()
         let ErroEmbed = new MessageEmbed()
           .setColor(`#36393f`)
