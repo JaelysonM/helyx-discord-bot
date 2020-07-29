@@ -7,6 +7,7 @@ module.exports = client => {
     isMainServer: true,
     prefix: '&',
     membro: 'membro',
+    serverIp: 'jogar.redehelyx.com',
     reportRejectedChannel: null,
     reportAcceptChannel: null,
     captchaChannel: null,
