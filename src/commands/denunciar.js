@@ -29,7 +29,7 @@ exports.run = async (client, message, args, command) => {
         } else {
           report.reason = message.content;
           await msg.edit(new MessageEmbed()
-            .setAuthor(`${message.author.username} - Denúncia completada!`, `https://gamepedia.cursecdn.com/minecraft_gamepedia/thumb/0/0f/Lime_Dye_JE2_BE2.png/150px-Lime_Dye_JE2_BE2.png?version=689addf38f5c21626ee91ec07e6e8670`).setColor('#00ff04').setThumbnail(`https://minotar.net/avatar/${report.reported}`)
+            .setAuthor(`${message.author.username} - Denúncia completada!`, `https://gamepedia.cursecdn.com/minecraft_gamepedia/thumb/0/0f/Lime_Dye_JE2_BE2.png/150px-Lime_Dye_JE2_BE2.png?version=689addf38f5c21626ee91ec07e6e8670`).setColor('#00ff04').setThumbnail(`https://minotar.net/avatar/${report.reported.replace(' ', '')}`)
             .setDescription(`Jogador à ser denunciado: **${report.reported}**\nMotivo/prova da denúncia: **${report.reason}**\n\nSua denúncia foi criada com sucesso, em instantes ela será encaminhada para nossa equipe, onde ela será analisada.\n`).setFooter('Denúncia feita em ' + formatDateBR(Date.now())))
           const reportChannel = await client.guilds.cache.get(config.attendanceServer).channels.cache.get(config.reportChannel);
           reportChannel.send(new MessageEmbed()
