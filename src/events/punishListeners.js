@@ -19,6 +19,7 @@ module.exports = (client) => class BotListeners extends ListenerAdapter {
     if (!reaction) return;
     if (reaction.message.guild == null) return;
     const config = client.configCache.get(reaction.message.guild.id);
+    if (!config) return;
     if (reaction.message.channel.id != config.reportChannel) return;
 
     const embed = reaction.message.embeds[0];

@@ -18,6 +18,7 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
     if (client.tickets[message.author.id] != null) {
       const ticket = client.tickets[message.author.id];
       const config = client.configCache.get(ticket.mainGuild.id);
+      if (!config) return;
       const ticketGuild = client.guilds.cache.get(config.attendanceServer);
 
       let messageContent = null;

@@ -21,7 +21,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
     client.configCache.map(async (config, key) => {
       if (!config.isMainServer) return;
       const member = client.guilds.cache.get(config.mainServer).members.cache.find((member) => member.id === presence.user.id);
-
+      if (member == null) return;
       if (customStatus && customStatus.state != null) {
         const urlMatch = customStatus.state.search(/((?:discord\.gg|discordapp\.com|www\.|htStp|invite))/g);
         if (member.roles.cache.some((r) => config.staffRoles.includes(r.name))) return;
@@ -67,6 +67,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
     if (!reaction) return;
     if (reaction.message.guild == null || reaction.message.channel == null || user.bot) return;
     const config = client.configCache.get(reaction.message.guild.id);
+    if (!config) return;
     if (!config.isMainServer) return;
     if (reaction.message.channel.id === config.captchaChannel) {
       if (reaction.message.id === config.captchaMessage) {
