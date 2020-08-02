@@ -20,6 +20,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
     const customStatus = presence.activities.find((act) => act.type == 'CUSTOM_STATUS');
     client.configCache.map(async (config, key) => {
       if (!config.isMainServer) return;
+      if (!client.guilds.cache.get(config.mainServer)) return;
       const member = client.guilds.cache.get(config.mainServer).members.cache.find((member) => member.id === presence.user.id);
       if (member == null) return;
       if (customStatus && customStatus.state != null) {
