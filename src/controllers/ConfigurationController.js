@@ -7,6 +7,8 @@ module.exports = client => {
     isMainServer: true,
     prefix: '&',
     membro: 'membro',
+    helperRole: "AJUDANTE",
+    serverName: 'Rede Healey',
     serverIp: 'jogar.redehelyx.com',
     reportRejectedChannel: null,
     reportAcceptChannel: null,
@@ -106,6 +108,12 @@ module.exports = client => {
       if (!data) client.configTable.set(guild.id, { ...client.defaultConfigBody, ...data })
       return { ...client.defaultConfigBody, ...data }
     }
+
+  client.avaliableUsage = async (guild) => {
+    const config = await client.getGuild(guild);
+    const mappedGuild = Object.values(config).filter(result => result != null);
+    return parseFloat((mappedGuild.length / Object.keys(client.defaultConfigBody).length) * 100).toFixed(2) >= 100;
+  }
   client.updateGuildValues = async (user, arrayKeyValue) => {
     const data = await client.getGuild(user);
     new Map(Object.entries(arrayKeyValue)).forEach((value, key) => {

@@ -24,8 +24,11 @@ module.exports = (client) => class CommandListeners extends ListenerAdapter {
     } else if (client.aliases.has(command.slice(prefix.length))) {
       archiveCommand = client.commands.get(client.aliases.get(command.slice(prefix.length)));
     }
-    if (archiveCommand)
+    if (archiveCommand) {
       archiveCommand.run(client, message, args, archiveCommand);
+      message.delete();
+    }
+
 
 
   }

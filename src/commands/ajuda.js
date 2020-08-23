@@ -6,14 +6,15 @@ const listCommands = async (commands, config) => {
 }
 
 exports.run = async (client, message, args, command) => {
-
-    message.delete()
-    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+    if (!client.hasPermission(command, message.member))
         return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+
+    if (!client.avaliableUsage(message.guild))
+        return message.channel.send(`🚫 O bot nesse servidor não foi completamente configurado.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     const config = client.configCache.get(message.guild.id);
 
-    const helperRole = message.guild.roles.cache.find(role => role.name == 'AJUDANTE');
+    const helperRole = message.guild.roles.cache.find(role => role.name.toLowerCase() == config.helperRole.toLowerCase());
     const painel = await message.channel.send(new MessageEmbed()
 
         .setTitle(`Este processo pode demorar alguns segundos`).setThumbnail(`https://media0.giphy.com/media/Tk25o3pwpdbQqUS8Ht/giphy.gif`)

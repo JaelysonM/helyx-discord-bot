@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js')
 const { formatDateBR, formatTimeBR, formatNumber } = require('../utils/dateUtils')
 
 
-const { toMillis, hoursToMillis, daysToMillis } = require('../utils/timeUtils');
+const { toMillis } = require('../utils/timeUtils');
 
 const { isNumber } = require('../utils/methods')
 
@@ -12,12 +12,13 @@ const punishesEmbedList = (punishes) => Object.values(punishes).map((item, index
 
 
 module.exports.run = async (client, message, args, command) => {
-    message.delete()
+    if (!client.hasPermission(command, message.member))
+        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+    if (!client.avaliableUsage(message.guild))
+        return message.channel.send(`🚫 O bot nesse servidor não foi completamente configurado.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     const config = client.configCache.get(message.guild.id);
     let silent = false;
-    if (!client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name))
-        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
     let member = message.mentions.members.first()
     if (!member) return message.channel.send(`Necessito de um usuário para punir!`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
@@ -26,7 +27,7 @@ module.exports.run = async (client, message, args, command) => {
     if (args.length == 2) silent = args[1].includes('-s') ? true : false;
     if (args.length > 2) silent = args[2].includes('-s') ? true : false;
     if (mute.timestamp != 0 && Date.now() > mute.muteTimestamp) member.roles.remove(config.mutedRole);
-    if (mute.muteTimestamp != 0 && member.roles.cache.some(r => ['SILENCIADO'].includes(r.name))) { message.channel.send(`O jogador \`\`${member.user.username + '#' + member.user.discriminator}\`\`, já está silenciado pelo tempo de \`\`${formatTimeBR(mute.muteTimestamp - Date.now())}\`\``).then(async message => { try { await message.delete({ timeout: 10000 }) } catch (error) { } }); return; };
+    if (mute.muteTimestamp != 0 && member.roles.cache.some(r => [config.mutedRole].includes(r.id))) { message.channel.send(`O jogador \`\`${member.user.username + '#' + member.user.discriminator}\`\`, já está silenciado pelo tempo de \`\`${formatTimeBR(mute.muteTimestamp - Date.now())}\`\``).then(async message => { try { await message.delete({ timeout: 10000 }) } catch (error) { } }); return; };
     await message.channel.send(new MessageEmbed().setTitle(`${silent ? `🔕 __Modo silencioso__` : ''}`)
         .setDescription(`Você deve escolher um dos motivos abaixo para confirmar a punição ao membro, basta copiar o ID do motivo e enviar neste canal de texto.\n\n \`\`\`${punishesEmbedList(config.punishes)}\`\`\`\ \nEnvie \`cancelar\` para cancelar a ação que o comando causará sobre o membro, deste modo a punição não será aplicada!`)).then(async msg => {
             const collector = msg.channel.createMessageCollector(a => a.author.id == message.author.id, { time: 10000 * 50, max: 1 });

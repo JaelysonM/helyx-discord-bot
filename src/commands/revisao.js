@@ -1,8 +1,10 @@
 const { MessageEmbed } = require('discord.js')
 
 exports.run = async (client, message, args, command) => {
-  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+  if (!client.hasPermission(command, message.member))
     return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+  if (!client.avaliableUsage(message.guild))
+    return message.channel.send(`🚫 O bot nesse servidor não foi completamente configurado.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
   const config = client.configCache.get(message.guild.id);
 

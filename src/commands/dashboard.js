@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageCollector } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 const { formatDateBR } = require('../utils/dateUtils')
 
@@ -25,10 +25,9 @@ const updatedEmbedInternal = (message, config) => {
 
 
 exports.run = async (client, message, args, command) => {
-
-  message.delete();
-  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+  if (!client.hasPermission(command, message.member))
     return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+
   const config = client.configCache.get(message.guild.id);
 
   await message.channel.send(new MessageEmbed().setTitle(`Painel de configuração rápida do servidor!`)

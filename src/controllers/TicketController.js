@@ -23,7 +23,9 @@ module.exports = client => {
 
       setInterval(async () => {
         client.configCache.map(async (config, key) => {
-          if (!config.isMainServer) return
+          if (!config.isMainServer) return;
+          if (!client.avaliableUsage(client.guilds.cache.get(key))) return;
+          if (!client.guilds.cache.get(config.mainServer)) return;
           await client.guilds.cache.get(config.mainServer).channels.cache.get(config.attendancePainelChannel).messages.fetch(config.attendancePainelMessage).then(message => {
             message.edit(new MessageEmbed()
               .setTitle(`Área de atendimento ao jogador.`)

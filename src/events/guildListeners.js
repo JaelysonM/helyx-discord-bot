@@ -20,6 +20,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
     const customStatus = presence.activities.find((act) => act.type == 'CUSTOM_STATUS');
     client.configCache.map(async (config, key) => {
       if (!config.isMainServer) return;
+      if (!client.avaliableUsage(client.guilds.cache.get(key))) return;
       if (!client.guilds.cache.get(config.mainServer)) return;
       const member = client.guilds.cache.get(config.mainServer).members.cache.find((member) => member.id === presence.user.id);
       if (member == null) return;
@@ -60,6 +61,7 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
 
   async onGuildMemberAdd(member) {
     const config = client.configCache.get(member.guild.id);
+    if (!client.avaliableUsage(member.guild.id)) return;
     if (config.isMainServer)
       await member.guild.channels.cache.get(config.captchaChannel).messages.fetch(config.captchaMessage).then((message) => message.reactions.cache.get('✅').users.remove(member.user));
   }

@@ -2,16 +2,24 @@
 
 
 module.exports = (client) => {
-  client.getMemberCommands = (member) => {
-    const commands = [];
-    client.rolesCommand.map((value, key) => {
-      const role = member.guild.roles.cache.find(role => role.name === value[0]);
-      if (role) {
-        if (member.roles.highest.rawPosition >= role.rawPosition)
-          commands.push(client.commands.get(key))
 
-      }
-    })
-    return commands;
-  }
+  client.hasPermission = (command, member) => {
+    if (command.help.roles && !client.getMemberCommands(member).find(cmd => cmd.help.name == command.help.name)) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+    client.getMemberCommands = (member) => {
+      const commands = [];
+      client.rolesCommand.map((value, key) => {
+        const role = member.guild.roles.cache.find(role => role.name.toLowerCase() === value[0].toLowerCase());
+        if (role) {
+          if (member.roles.highest.rawPosition >= role.rawPosition)
+            commands.push(client.commands.get(key))
+
+        }
+      })
+      return commands;
+    }
 }

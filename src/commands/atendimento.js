@@ -1,10 +1,10 @@
 const { MessageEmbed } = require('discord.js')
 
 exports.run = async (client, message, args, command) => {
-    message.delete();
-    const config = client.configCache.get(message.guild.id);
-    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
+    if (!client.hasPermission(command, message.member))
         return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+
+    const config = client.configCache.get(message.guild.id);
 
     const embed = new MessageEmbed()
         .setTitle(`Área de atendimento ao jogador.`)

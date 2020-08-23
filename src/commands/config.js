@@ -8,10 +8,9 @@ const fs = require('fs')
 
 
 exports.run = async (client, message, args, command) => {
-  message.delete()
-  if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) == undefined)
-    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
+  if (!client.hasPermission(command, message.member))
+    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
   const guild = await client.getGuild(message.guild);
   const mappedGuild = Object.values(guild).filter(result => result != null);
 
