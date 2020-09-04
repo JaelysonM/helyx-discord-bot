@@ -7,7 +7,7 @@ exports.run = async (client, message, args, command) => {
   const config = client.configCache.get(message.guild.id);
   message.channel.send('Ao completar a verificação todos os canais aparecerão e este ficará oculto.')
   const captcha = await message.channel.send(new MessageEmbed()
-    .setAuthor(config.serverName, `${client.user.avatar != null ? client.user.avatar : "https://media3.giphy.com/media/chiLb8yx7ZD1Pdx6CF/giphy.gif"}`)
+    .setAuthor(config.serverName, `${client.user.avatar_url != null ? client.user.avatar_url : "https://media3.giphy.com/media/chiLb8yx7ZD1Pdx6CF/giphy.gif"}`)
     .setDescription(`Somente membros verificados possuem acesso aos canais do servidor.\n Complete a verificação clicando no emoji abaixo. `)
     .setColor(`#36393f`)).then(async msg => await msg.react('✅'));
 
