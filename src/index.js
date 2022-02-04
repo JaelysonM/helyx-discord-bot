@@ -40,7 +40,7 @@ fs.readdir('./src/commands/', (err, files) => {
     const props = require(`./commands/${file}`);
     console.log(`\x1b[33m  ⤷\x1b[0m ${file} loaded`);
     client.commands.set(props.help.name, props);
-    client.rolesCommand.set(props.help.name, (props.help.roles ? props.help.roles : ['PLAYERS']))
+    client.rolesCommand.set(props.help.name, (props.help.roles ? props.help.roles : 'allowed'))
     if (props.help.aliases) {
       props.help.aliases.forEach(alias => {
         client.aliases.set(alias, props.help.name);

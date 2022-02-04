@@ -8,8 +8,9 @@ module.exports = client => {
     prefix: '&',
     membro: 'membro',
     helperRole: "AJUDANTE",
-    serverName: 'Rede Healey',
-    serverIp: 'jogar.redehelyx.com',
+    serverName: 'Rede stone',
+    serverIp: 'redestone.com',
+    statusChannel: "750086230271721559",
     reportRejectedChannel: null,
     reportAcceptChannel: null,
     captchaChannel: null,
@@ -24,8 +25,9 @@ module.exports = client => {
     spammerRole: null,
     reportsEnabled: true,
     reviewsEnabled: true,
-    reviewDescription: `As aplicações para a equipe são realizadas por um formulário que pode ser enviado utilizando o link abaixo. \n\n Link: https://bit.ly/formularioredeshelds \n Clique [aqui](https://bit.ly/formularioredeshelds) para ser redirecionado.`,
-    ticketsEnabled: true,
+    reviewDescription: `Os formularios para a revisão são realizadas por um formulário que pode ser enviado utilizando o link abaixo. \n\n Link: https://bit.ly/RevisaoWars \n Clique [aqui](https://bit.ly/RevisaoWars) para ser redirecionado.`,
+    formDescription: `As aplicações para a equipe são realizadas por um formulário que pode ser enviado utilizando o link abaixo. \n\n Link: https://bit.ly/revisaowars\n Clique [aqui](https://bit.ly/revisaowars) para ser redirecionado.`,
+	ticketsEnabled: true,
     ticketDelay: true,
     ticketsCapacity: 50,
     staffRoles: [],
@@ -33,6 +35,9 @@ module.exports = client => {
     punishChannel: null,
     appelChannel: null,
     reportChannel: null,
+    command_roles: {
+      "ajuda": ['AJUDANTE'],
+    },
     punishes: {
       1: {
         timestamp: hoursToMillis(2),
@@ -97,16 +102,22 @@ module.exports = client => {
         •  Canal deve ser ativo com ao menos 1 vídeo no servidor por semana.`, `\`\`MERCADO PAGO\`\`: Acesse: https://www.mercadopago.com.br/ajuda/respostas-solucoes-pagamentos-online_189 e clique em \`\`Tenho um problema com o pagamento.\`\`
         PAYPAL: Você pode conferir como pedir reembolso por PayPal acessando: https://bit.ly/3ecd54P.
         
-        Lembrando: Independente de você vencer ou perder a disputa, tem a chance de não receber o dinheiro e ainda será aplicada a punição permanente por Estorno de pagamento em sua conta`, `Message in Working...`, `Não, por questões de segurança optamos por não fazer transferências em nenhum ocasião, a não ser que tenha ocorrido um problema com a compra do produto e seja realmente necessário a transferência.`]
+        Lembrando: Independente de você vencer ou perder a disputa, tem a chance de não receber o dinheiro e ainda será aplicada a punição permanente por Estorno de pagamento em sua conta`, `Message in Working...`, `Não, por questões de segurança optamos por não fazer transferências em nenhum ocasião, a não ser que tenha ocorrido um problema com a compra do produto e seja realmente necessário a transferência.`, `aaaaaaaaa`],
+
   },
 
 
 
 
     client.getGuild = async (guild) => {
-      const data = await client.configTable.get(guild.id);
-      if (!data) client.configTable.set(guild.id, { ...client.defaultConfigBody, ...data })
-      return { ...client.defaultConfigBody, ...data }
+      if (guild.id) {
+        const data = await client.configTable.get(guild.id);
+        if (!data) client.configTable.set(guild.id, { ...client.defaultConfigBody, ...data })
+        return { ...client.defaultConfigBody, ...data }
+      } else {
+        return undefined;
+      }
+
     }
 
   client.avaliableUsage = async (guild) => {

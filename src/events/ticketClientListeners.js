@@ -137,7 +137,7 @@ module.exports = (client) => class TicketChatListeners extends ListenerAdapter {
   
                     **Perguntas frequentemente enviadas!**
                     Caso sua dúvida seja umas das listadas abaixo, basta enviar o ID correspondente a sua dúvida neste canal! Caso contrario, prossiga informando sua dúvida.
-                    \`\`\`01 » Formulário de integração a equipe.\n02 » Formulário de revisão de punição.\n03 » Regras do servidor.\n04 » Como vincular sua conta e vantagens.\n05 » Solicitação e requisitos youtuber.\n06 » Pedido de reembolso.\n07 » Como efetuar uma compra no servidor.\n08 » É possível transferir vip de conta?\`\`\`
+                    \`\`\`01 » Formulário de integração a equipe.\n02 » Formulário de revisão de punição.\n03 » Regras do servidor.\n04 » Como vincular sua conta e vantagens.\n05 » Solicitação e requisitos youtuber.\n06 » Pedido de reembolso.\n07 » Como efetuar uma compra no servidor.\n08 » É possível transferir vip de conta?\n09 » Quais a recompensas de boosts? (manutenção)\`\`\`
                     `));
           const message = await reaction.message.channel.send(new MessageEmbed().setTitle('Criando seu ticket')
             .setDescription('Pedimos que você redirecione-se as suas mensagens privadas onde estaremos enviando informações.').setColor('#36393f')

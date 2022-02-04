@@ -19,5 +19,6 @@ exports.run = async (client, message, args, command) => {
 
 exports.help = {
   name: 'revisao',
+  roles: ['MEMBRO'],
   description: 'Recebe o formulário para revisão de punições;'
 }

@@ -1,18 +1,21 @@
 const { MessageEmbed } = require('discord.js')
 
 exports.run = async (client, message, args, command) => {
-    if (client.getMemberCommands(message.member).find(cmd => cmd.help.name == command.help.name) !== undefined)
-        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+  if (!client.hasPermission(command, message.member))
+    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+  if (!client.avaliableUsage(message.guild))
+    return message.channel.send(`🚫 O bot nesse servidor não foi completamente configurado.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
-    const embed = new MessageEmbed()
-
-        .setDescription(`As aplicações para a equipe são realizadas por um formulário que pode ser enviado utilizando o link abaixo. \n\n Link: https://bit.ly/formularioredeshelds \n Clique [aqui](https://bit.ly/formularioredeshelds) para ser redirecionado.`)
-        .setColor(`#36393f`)
-    message.channel.send(embed).then(async message => { try { await message.delete({ timeout: 6000 }) } catch (error) { } })
+  const config = client.configCache.get(message.guild.id);
+  
+  message.channel.send(new MessageEmbed()
+    .setDescription(config.formDescription)
+    .setColor(`#36393f`)).then(async message => { try { await message.delete({ timeout: 6000 }) } catch (error) { } })
 
 }
 
 exports.help = {
-    name: 'formulario',
-    description: 'Recebe o formulário de aplicação a equipe;'
+  name: 'formulario',
+  roles: ['MEMBRO'],
+  description: 'Recebe o formulário para aplicar-se à equipe;'
 }

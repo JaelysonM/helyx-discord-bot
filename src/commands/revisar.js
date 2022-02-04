@@ -79,6 +79,6 @@ Você terá \`\`10 segundos\`\` para escolher um motivo para a revisão de **${n
 
 exports.help = {
     name: 'revisar',
-    roles: ['ADMIN'],
+    roles: ['ADMINISTRADOR'],
     description: 'Responda a o pedido de revisão de um jogador;'
 }

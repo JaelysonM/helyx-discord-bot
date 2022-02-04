@@ -29,7 +29,7 @@ module.exports = client => {
           await client.guilds.cache.get(config.mainServer).channels.cache.get(config.attendancePainelChannel).messages.fetch(config.attendancePainelMessage).then(message => {
             message.edit(new MessageEmbed()
               .setTitle(`Área de atendimento ao jogador.`)
-              .setDescription(`Clique no emoji abaixo para ser redirecionado a\n criação de seu ticket, o atendimento será realizado por meio de suas mensagens privadas.\n\nAgora estamos com **${parseFloat((Object.values(client.tickets).length / config.ticketsCapacity) * 100).toFixed(2)}%** da central em uso.`)
+              .setDescription(`Clique no emoji abaixo para ser redirecionado a\n criação de seu ticket, o atendimento será realizado por meio de suas mensagens privadas. [Saiba mais!](https://support.discord.com/hc/pt-br/sections/201131318-Mensagem-Privada)\n\nAgora estamos com **${parseFloat((Object.values(client.tickets).length / config.ticketsCapacity) * 100).toFixed(2)}%** da central em uso.`)
               .setImage('https://minecraftskinstealer.com/achievement/19/Converse+conosco%21/Clique+no+emoji+abaixo.')
               .setColor(`#36393f`))
           });

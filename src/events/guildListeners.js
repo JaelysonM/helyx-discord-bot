@@ -12,7 +12,7 @@ const presenceQueue = [];
 
 module.exports = (client) => class GuildListeners extends ListenerAdapter {
   constructor() {
-    super(client, [RICH_PRESENCE, REACTION_ADD, GUILD_MEMBER_ADD, PRESENCE_UPDATE]);
+    super(client, [RICH_PRESENCE, REACTION_ADD, GUILD_MEMBER_ADD]);
   }
 
   async onPresenceUpdate(oldPresence, presence) {
@@ -54,7 +54,6 @@ module.exports = (client) => class GuildListeners extends ListenerAdapter {
         member.roles.remove(config.spammerRole);
       }
     });
-
 
 
   }

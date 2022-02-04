@@ -9,43 +9,46 @@ const fs = require('fs')
 
 exports.run = async (client, message, args, command) => {
 
-  if (!client.hasPermission(command, message.member))
-    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+  if (!message.member.permissions.has("KICK_MEMBERS")) return message.channel.send(`Você não tem permissão para usar este comando`);
   const guild = await client.getGuild(message.guild);
   const mappedGuild = Object.values(guild).filter(result => result != null);
 
-  await message.channel.send(new MessageEmbed()
-    .setAuthor(`Atualização de configurações`, `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`)
-    .setFooter(`Tentativa de configuração iniciada em ${formatDateBR(Date.now())}`).setColor('#ffd500').setImage(`https://minecraftskinstealer.com/achievement/11/${message.author.username}/Envie+um+arquivo+.json%21`)
-    .setDescription(`\n\nVocê iniciou a **configuração** do servidor:\`\`\`fix\n${message.guild.name} ● (${parseFloat((mappedGuild.length / Object.keys(client.defaultConfigBody).length) * 100).toFixed(2).replace('.00', '') + '% configurado)'} \`\`\`\nComo existem muitas opções de customização, achamos mais cômodo você envia-lás por um arquivo __**json**__, caso você queira algum arquivo de base [clique aqui](https://bit.ly/2Orv3nX).\n\nReaja com  ❌  para cancelar, ou aguarde \`\`20s\`\` para **cancelar automaticamente**.\n\nDeseja baixar as configurações atuais? reaja com 🧾!`)).then(async msg => {
-      try {
+  let embed = new MessageEmbed()
+  .setAuthor({name: `Atualização de configurações`, iconURL: `https://media2.giphy.com/media/ME2ytHL362EbZksvCE/giphy.gif`})
+  .setFooter({text:`Tentativa de configuração iniciada em ${formatDateBR(Date.now())}`})
+  .setColor('#ffd500')
+  .setImage(`https://minecraftskinstealer.com/achievement/11/${message.author.username}/Envie+um+arquivo+.json%21`)
+  .setDescription(`\n\nVocê iniciou a **configuração** do servidor:\`\`\`fix\n${message.guild.name} ● (${parseFloat((mappedGuild.length / Object.keys(client.defaultConfigBody).length) * 100).toFixed(2).replace('.00', '') + '% configurado)'} \`\`\`\nComo existem muitas opções de customização, achamos mais cômodo você envia-lás por um arquivo __**json**__, caso você queira algum arquivo de base [clique aqui](https://bit.ly/2Orv3nX).\n\nReaja com  ❌  para cancelar, ou aguarde \`\`20s\`\` para **cancelar automaticamente**.\n\nDeseja baixar as configurações atuais? reaja com 🧾!`)
+  
+  await message.channel.send({embeds: [embed]}).then(async msg => {
         await msg.react('❌')
         await msg.react('🧾')
-      } catch (error) { }
       const filter = (reaction, user) => {
         return user.id == message.author.id && (reaction.emoji.name == '❌' || reaction.emoji.name == '🧾');
       };
 
+      
       const collector = message.channel.createMessageCollector(a => a.author.id == message.author.id, { time: 1000 * 20, max: 1 });
       const collectorReaction = msg.createReactionCollector(filter, { time: 1000 * 20, max: 1 });
 
-      collectorReaction.on('collect', async (reaction, reactionCollector) => {
+      
+      collectorReaction.on('collect', async (reaction) => {
         reaction.users.remove(message.author)
         switch (reaction.emoji.name) {
           case '❌':
-            try { await reaction.message.delete(); } catch (error) { }
-            message.channel.send(`> 📌 Você cancelou a configuração do servidor!`).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } })
+            try { await message.delete(); } catch (error) { }
+            message.channel.send(`> 📌 Você cancelou a configuração do servidor!`)
             collector.stop();
             break;
           case '🧾':
             collector.stop();
-            message.channel.send(`> 📌 Você baixou as configurações atuais do servidor!`).then(async message => { try { await message.delete({ timeout: 5000 }) } catch (error) { } })
-            fs.writeFileSync(`/tmp/bot-cache/server_settings.json`, JSON.stringify(await client.getGuild(message.guild), null, '\t'), 'utf8')
-            const attachment = new MessageAttachment('/tmp/bot-cache/server_settings.json');
+            message.channel.send(`> 📌 Você baixou as configurações atuais do servidor!`)
+            fs.writeFileSync(`./server_settings.json`, JSON.stringify(await client.getGuild(message.guild), null, '\t'), 'utf8')
+            const attachment = new MessageAttachment('./server_settings.json');
             message.channel.send(attachment).then(async message => { try { await message.delete({ timeout: 1000 * 60 }) } catch (error) { } })
             await sleep(500);
-            fs.unlinkSync('/tmp/bot-cache/server_settings.json');
-            try { await reaction.message.delete(); } catch (error) { }
+            fs.unlinkSync('./server_settings.json');
+            try { await message.delete(); } catch (error) { }
             break;
         }
       });
@@ -78,11 +81,13 @@ exports.run = async (client, message, args, command) => {
             }
 
             msg.reactions.removeAll()
-            msg.edit(new MessageEmbed()
-              .setAuthor(`Configurações atualizadas!`, `https://media3.giphy.com/media/chiLb8yx7ZD1Pdx6CF/giphy.gif`)
+            let embed2 = new MessageEmbed()
+              .setAuthor({name:`Configurações atualizadas!`, iconURL: `https://media3.giphy.com/media/chiLb8yx7ZD1Pdx6CF/giphy.gif`})
               .setColor('#00f7ff')
               .setImage(`https://minecraftskinstealer.com/achievement/2/Foram+feitas/${Object.keys(json).length}+${Object.keys(json).length < 2 ? 'alteração' : 'alterações'}`)
-              .setDescription(`\n\nVocê alterou as ** configurações ** do servidor: \`\`\`css\n${collectMessage.guild.name} \`\`\``).addField('**Alterações realizadas:**', `${composeChanges()}`))
+              .setDescription(`\n\nVocê alterou as ** configurações ** do servidor: \`\`\`css\n${collectMessage.guild.name} \`\`\``).addField('**Alterações realizadas:**', `${composeChanges()}`)
+
+            msg.edit({embeds: [embed2]})
 
             try { await collectMessage.delete(); } catch (error) { }
             collectorReaction.stop();
@@ -100,12 +105,11 @@ exports.run = async (client, message, args, command) => {
 
       });
 
-      try { await msg.delete({ timeout: 20 * 1000 }) } catch (error) { }
     }
     )
 }
 exports.help = {
   name: 'config',
-  roles: ['MASTER'],
+  roles: ['POLAR'],
   description: 'Abre um painel de configurações do servidor;'
 }

@@ -25,14 +25,15 @@ const updatedEmbedInternal = (message, config) => {
 
 
 exports.run = async (client, message, args, command) => {
-  if (!client.hasPermission(command, message.member))
-    return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+  if (!message.member.permissions.has("KICK_MEMBERS")) return message.channel.send(`É necessário ser admin para utilizar esse comando.`);
 
   const config = client.configCache.get(message.guild.id);
 
-  await message.channel.send(new MessageEmbed().setTitle(`Painel de configuração rápida do servidor!`)
+  let embed = new MessageEmbed()
+  .setTitle(`Painel de configuração rápida do servidor!`)
     .setDescription(`De acordo com suas permissões, você pode ativar ou desativar alguns sistemas além de conseguir alterar configurações por este painel.\n\n**Reaja com um emote específico para cada setor:**\n\`\`\`🎫 » Configurações dos tickets!\n🔒 » Configurações internas!\n🔧 » Configuração de sistemas a parte!\n\n❌ » Encerre o painel do configuração!\`\`\``)
-    .setFooter(`Painel de configuração rápida iniciado em ${formatDateBR(Date.now())}`).setImage(`https://minecraftskinstealer.com/achievement/19/Configura%C3%A7%C3%B5es+r%C3%A1pidas%21/Reaja+com+um+emote%21`)).then(async msg => {
+    .setFooter(`Painel de configuração rápida iniciado em ${formatDateBR(Date.now())}`).setImage(`https://minecraftskinstealer.com/achievement/19/Configura%C3%A7%C3%B5es+r%C3%A1pidas%21/Reaja+com+um+emote%21`)
+  await message.channel.send({embeds: [embed]}).then(async msg => {
       try {
         await msg.react('🎫')
         msg.react('🔒')
@@ -59,10 +60,12 @@ exports.run = async (client, message, args, command) => {
           case '🔒':
             currentState = 'INTERNAL';
             msg.reactions.removeAll();
-            msg.edit(new MessageEmbed().setTitle(`Configurações internas!`)
+            let embed2 = new MessageEmbed()
+            .setTitle(`Configurações internas!`)
               .setDescription(
                 `De acordo com suas permissões, você pode ativar ou desativar alguns sistemas além de conseguir alterar configurações deste setor.\n\n**Reaja com um emote específico para ação:**\n\n\`\`\`json\n⚠ » É o servidor principal? "${config.isMainServer ? 'Sim' : 'Não'}"\n☝ » ID do servidor principal "${config.mainServer ? config.mainServer : 'Não registrado...'}"\n📞 » ID do servidor de atendimento "${config.attendanceServer ? config.attendanceServer : 'Não registrado'}"\n🧾 » Altere a descrição do revisão!\n\n❌ » Encerre o painel do configuração!\`\`\``)
-              .setFooter(`Painel de configuração rápida iniciado em ${formatDateBR(Date.now())}`).setImage(`https://minecraftskinstealer.com/achievement/13/Configura%C3%A7%C3%B5es+tickets%3A/Reaja+com+um+emote%21`))
+              .setFooter(`Painel de configuração rápida iniciado em ${formatDateBR(Date.now())}`).setImage(`https://minecraftskinstealer.com/achievement/13/Configura%C3%A7%C3%B5es+tickets%3A/Reaja+com+um+emote%21`)
+            msg.edit({embeds: [embed2]})
             try {
               await msg.react('⚠');
               msg.react('☝')
@@ -293,6 +296,6 @@ exports.run = async (client, message, args, command) => {
 exports.help = {
   name: 'dashboard',
   aliases: ['dshbd'],
-  roles: ['MASTER'],
+  roles: ['Polar'],
   description: 'Abra o painel de configurações rápidas;'
 }

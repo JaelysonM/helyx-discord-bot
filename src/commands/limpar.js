@@ -9,6 +9,6 @@ exports.run = (client, message, args, command) => {
 
 exports.help = {
     name: "limpar",
-    roles: ['MASTER'],
+    roles: ['DIRETOR'],
     description: 'Limpa a histórico de mensagens de um canal com um certo alcançe;'
 }

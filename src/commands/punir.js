@@ -12,8 +12,7 @@ const punishesEmbedList = (punishes) => Object.values(punishes).map((item, index
 
 
 module.exports.run = async (client, message, args, command) => {
-    if (!client.hasPermission(command, message.member))
-        return message.channel.send(`🚫 Você não possui permissão para executar este comando.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
+   
     if (!client.avaliableUsage(message.guild))
         return message.channel.send(`🚫 O bot nesse servidor não foi completamente configurado.`).then(async message => { try { await message.delete({ timeout: 2000 }) } catch (error) { } });
 
